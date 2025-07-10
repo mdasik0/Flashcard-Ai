@@ -3,7 +3,7 @@ import React from "react";
 
 export default function Home() {
   const [prompt, setPrompt] = React.useState("");
-  const textareaRef = React.useRef(null);
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
   // Auto-resize textarea
   React.useEffect(() => {
