@@ -134,21 +134,21 @@ export default function Navbar() {
       className="navbar min-h-screen flex flex-col items-center justify-center gap-10 px-6"
       id="navbar"
     >
-        <Link href={"/"}>
-      <div className="nav-item" data-tooltip="Generate Card">
+      <Link href={"/"}>
+        <div className="nav-item" data-tooltip="Generate Card">
           <RiAiGenerate />
-      </div>
-        </Link>
-        <Link href={"/cards"}>
-      <div className="nav-item" data-tooltip="Cards">
+        </div>
+      </Link>
+      <Link href={"/cards"}>
+        <div className="nav-item" data-tooltip="Cards">
           <TbPlayCardOff />
-      </div>
-        </Link>
-        <Link href={"/decks"}>
-      <div className="nav-item" data-tooltip="Decks">
+        </div>
+      </Link>
+      <Link href={"/decks"}>
+        <div className="nav-item" data-tooltip="Decks">
           <GiCardRandom />
-      </div>
-        </Link>
+        </div>
+      </Link>
     </nav>
   );
 }
