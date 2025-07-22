@@ -1,17 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { geistMono, geistSans } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "Flashcard-Ai",
@@ -29,8 +19,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="flex justify-start items-center min-h-screen">
-        <Navbar />
-        {children}
+          <Navbar />
+          {children}
         </div>
       </body>
     </html>
