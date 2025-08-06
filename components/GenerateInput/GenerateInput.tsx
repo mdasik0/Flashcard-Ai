@@ -70,17 +70,17 @@ console.log(data.flashcards)
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         onKeyDown={handleKeyDown}
-        className="bg-stone-800 w-[500px] min-h-[24px] max-h-[200px] resize-none overflow-hidden rounded-xl p-4 absolute left-[6px] top-[6px] focus:outline-0 text-white z-10"
+        className="bg-[#0e0e0e] w-[500px] min-h-[24px] max-h-[200px] resize-none overflow-hidden rounded-xl p-4 absolute left-[6px] top-[6px] focus:outline-0 text-white z-10"
         placeholder="Enter a topic to generate flashcards... (Ctrl+Enter to submit)"
         rows={1}
         style={{ lineHeight: "1.5" }}
         disabled={isLoading}
       />
       <div
-        className="animated-container bg-gray-300 w-[512px] max-h-[254px] rounded-2xl px-2 flex flex-col items-start justify-end transition-all duration-300"
+        className="animated-container bg-[#302f2f] w-[512px] max-h-[254px] rounded-2xl px-2 flex flex-col items-start justify-end transition-all duration-300"
         style={{
           height: isFocused || prompt ? `${inputH}px` : "68px",
-          opacity: isFocused || prompt ? 1 : 0.3,
+          opacity: isFocused || prompt ? 1 : 0.4,
         }}
       >
         <button

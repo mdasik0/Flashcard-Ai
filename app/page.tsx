@@ -8,6 +8,8 @@ export default function Home() {
   const [flashcards, setFlashcards] = React.useState<Flashcard[] | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
+  console.log(flashcards)
+
   return (
     <div className="">
       <div className="flex items-center justify-center w-[calc(100vw-90px)] px-8">
@@ -26,7 +28,7 @@ export default function Home() {
                       Generated Flashcards
                     </h2>
                     <pre className="whitespace-pre-wrap text-sm bg-gray-50 p-4 rounded overflow-x-auto">
-                      {flashcards}
+                      {/* {flashcards} */}
                     </pre>
                   </div>
                 )}
