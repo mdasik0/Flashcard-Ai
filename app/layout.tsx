@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import { geistMono, geistSans } from "@/lib/fonts";
 import { AuthProvider } from "./providers";
+import AuthButton from "@/components/UtilityComp/AuthButton";
 
 export const metadata: Metadata = {
   title: "Flashcard-Ai",
@@ -31,7 +32,7 @@ export default function RootLayout({
                 </div>
               ) : (
                 <div className="border border-[#181818] px-5 py-2 rounded-lg uppercase text-sm duration-300 hover:bg-[#181818] cursor-pointer">
-                  Sign in
+                 <AuthButton />
                 </div>
               )}
             </div>
