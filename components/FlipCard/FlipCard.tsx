@@ -2,8 +2,9 @@
 import { useState } from "react";
 import "./flipCard.css";
 import { roboto } from "@/lib/fonts";
+import { Flashcard } from "@/types/flashcard";
 
-export default function FlipCard() {
+export default function FlipCard({ card, i }: { card: Flashcard, i: number }) {
   const [flip, setFlip] = useState(false);
   const deckName = "Js question";
   return (
@@ -13,14 +14,22 @@ export default function FlipCard() {
         <div
           className={`flip-card-front border-[10px] border-[#181818] bg-[#0e0e0e] flex flex-col justify-between leading-10 ${roboto.variable}`}
         >
-          <div className="p-4 pt-3 relative h-full">
+          <div className="p-4 pt-3 relative h-full flex flex-col">
             {/* question */}
-            <span className="text-3xl font-semibold">
-              How event loop handles sync and async questions?
-            </span>
+            <div className="flex-1 flex items-start justify-center">
+              <p
+                className="text-2xl font-semibold text-start w-full"
+                style={{
+                  whiteSpace: "normal",
+                }}
+              >
+                {card?.question}
+              </p>
+            </div>
+
             {/* index */}
             <div className="absolute bottom-2 right-2 text-xs bg-[#181818] hover:bg-[#1b1b1b] duration-300 w-6 h-6 rounded-full flex items-center justify-center">
-              01
+              {i + 1}
             </div>
           </div>
           <div
@@ -45,14 +54,9 @@ export default function FlipCard() {
 
         {/* Back face */}
         <div className="flip-card-back bg-[#181818] p-6">
-          <h3 className={`text-2xl ${roboto.variable}`}>Answer :</h3><br />
-          <span>
-            Synchronous code runs line-by-line, blocking further execution until
-            each task finishes. Asynchronous code (like setTimeout, fetch, or
-            Promise) is sent to the Web APIs or task queue. The event loop waits
-            for the call stack to be empty, then pushes async callbacks from the
-            queue into the stack to execute them.
-          </span>
+          <h3 className={`text-2xl ${roboto.variable}`}>Answer :</h3>
+          <br />
+          <span>{card?.answer}</span>
         </div>
       </div>
     </div>

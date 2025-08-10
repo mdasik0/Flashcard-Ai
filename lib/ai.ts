@@ -73,7 +73,10 @@ function analyzePrompt(prompt: string): { isValid: boolean; reason?: string; est
   }
   
   // Rough token estimation (1 token ≈ 4 characters for English)
-  const estimatedTokens = Math.ceil(trimmedPrompt.length / 4) + 500; // +500 for response
+  // Conservative estimate: input tokens + max output tokens
+  const inputTokens = Math.ceil(trimmedPrompt.length / 4) + 80; // +80 for system message
+  const maxOutputTokens = 200; // Our strict max_tokens limit
+  const estimatedTokens = inputTokens + maxOutputTokens;
   
   return { isValid: true, estimatedTokens };
 }
@@ -116,21 +119,21 @@ export async function generateFlashcards(prompt: string): Promise<FlashcardRespo
             role: "system",
             content: `You are a helpful assistant that generates educational flashcards. 
             
-            IMPORTANT RULES:
-            1. Generate EXACTLY ${MAX_FLASHCARDS_PER_REQUEST} flashcards, no more, no less
-            2. Return ONLY valid JSON in this exact format: [{"question": "...", "answer": "..."}]
-            3. Questions should be clear and specific
-            4. Answers should be concise but complete
-            5. Focus on the most important concepts from the input
+            CRITICAL REQUIREMENTS:
+            1. Generate EXACTLY ${MAX_FLASHCARDS_PER_REQUEST} flashcards only
+            2. Each answer must be under 20 words
+            3. Return ONLY this JSON format: [{"question":"...","answer":"..."}]
+            4. NO extra text, explanations, or formatting
+            5. If input unclear, return: {"error":"Please provide a clear educational topic"}
             
-            If the input is not educational or unclear, respond with: {"error": "Please provide a clear educational topic"}`,
+            Example output: [{"question":"What is photosynthesis?","answer":"Process where plants convert light into energy using chlorophyll"}]`,
           },
           {
             role: "user",
-            content: `Create ${MAX_FLASHCARDS_PER_REQUEST} flashcards about: ${prompt}`
+            content: `Create exactly ${MAX_FLASHCARDS_PER_REQUEST} flashcards about: ${prompt}`
           }
         ],
-        max_tokens: 400, // Reduced to control token usage
+        max_tokens: 200, // Strict limit for 2 short flashcards
         temperature: 0.3 // Lower for more consistent formatting
       })
     });
@@ -154,8 +157,6 @@ export async function generateFlashcards(prompt: string): Promise<FlashcardRespo
       return { success: false, error: "No content received from AI", tokenUsage: getTokenUsage() };
     }
     
-    console.log('Flashcards:', data?.flashcards);
-console.log('Tokens remaining:', data?.tokenUsage?.remainingTokens);
     // Update token usage
     const tokensUsed = data.usage?.total_tokens || analysis.estimatedTokens;
     updateTokenUsage(tokensUsed);
@@ -184,7 +185,7 @@ console.log('Tokens remaining:', data?.tokenUsage?.remainingTokens);
       
       return { 
         success: true, 
-        flashcards: validFlashcards.slice(0, MAX_FLASHCARDS_PER_REQUEST), // Ensure limit
+        flashcards: validFlashcards, // No slicing needed - AI should generate exact amount
         tokenUsage: getTokenUsage()
       };
       

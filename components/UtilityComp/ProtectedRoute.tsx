@@ -15,7 +15,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     if (status === "loading") return // Still loading
 
     if (!session) {
-      router.push("/api/auth/signin")
+      router.push("/")
       return
     }
   }, [session, status, router])
