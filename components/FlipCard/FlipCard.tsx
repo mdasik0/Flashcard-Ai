@@ -4,9 +4,17 @@ import "./flipCard.css";
 import { roboto } from "@/lib/fonts";
 import { Flashcard } from "@/types/flashcard";
 
-export default function FlipCard({ card, i }: { card: Flashcard, i: number }) {
+export default function FlipCard({ card, i, cardSelection }: { card: Flashcard, i: number, cardSelection?: boolean }) {
   const [flip, setFlip] = useState(false);
   const deckName = "Js question";
+  const handleCardEdit = (index: number) => {
+    // Handle card edit logic here
+    console.log(`Edit card at index ${index}`);
+  };
+  const handleCardDelete = (index: number) => {
+    // Handle card delete logic here
+    console.log(`Delete card at index ${index}`);
+  };
   return (
     <div className="flip-card-container" onClick={() => setFlip(!flip)}>
       <div className={`flip-card ${flip ? "flip-card-anim" : ""}`}>
@@ -42,12 +50,12 @@ export default function FlipCard({ card, i }: { card: Flashcard, i: number }) {
             </span>
             {/* edit and delete*/}
             <div>
-              <span className="text-xs bg-[#0e0e0e] px-3 py-2 rounded-full ms-2 cursor-pointer">
+              <button onClick={() => handleCardEdit(i)} disabled={cardSelection} className="text-xs disabled:cursor-not-allowed disabled:bg-[#1d1d1d] disabled:text-gray-400 bg-[#0e0e0e]  px-3 py-2 rounded-full ms-2 cursor-pointer">
                 Edit
-              </span>
-              <span className="text-xs bg-[#c2131393] px-3 py-2 rounded-full ms-2 cursor-pointer">
+              </button>
+              <button onClick={() => handleCardDelete(i)} disabled={cardSelection} className="text-xs disabled:cursor-not-allowed disabled:bg-[#1d1d1d] disabled:text-gray-400 bg-[#c21313] px-3 py-2 rounded-full ms-2 cursor-pointer">
                 Delete
-              </span>
+              </button>
             </div>
           </div>
         </div>
@@ -56,7 +64,9 @@ export default function FlipCard({ card, i }: { card: Flashcard, i: number }) {
         <div className="flip-card-back bg-[#181818] p-6">
           <h3 className={`text-2xl ${roboto.variable}`}>Answer :</h3>
           <br />
-          <span>{card?.answer}</span>
+          <span style={{
+                  whiteSpace: "normal",
+                }}>{card?.answer}</span>
         </div>
       </div>
     </div>

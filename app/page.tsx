@@ -1,6 +1,7 @@
 // UI Component (page.tsx)
 "use client";
 import FlipCard from "@/components/FlipCard/FlipCard";
+import CardSelectionButton from "@/components/G_Card_Selection/CardSelectionButton";
 import GenerateInput from "@/components/GenerateInput/GenerateInput";
 import { Flashcard } from "@/types/flashcard";
 import React from "react";
@@ -20,8 +21,13 @@ export default function Home() {
   }
 ]
 
+  const handleSelectFlashCard = (id: number) => {
+    // Logic to handle flashcard selection
+    console.log("Flashcard selected" + id);
+  };
+
   return (
-    <div className="">
+    <div>
       <div className="flex items-center justify-center w-[calc(100vw-90px)] px-8">
         {flashcardDemo || error ? (
           <>
@@ -34,19 +40,23 @@ export default function Home() {
 
                 {flashcardDemo && (
                   <div className="rounded-lg shadow p-6">
-                    <h2 className="text-xl font-bold mb-4">
+                    <h2 className="text-3xl font-[500] text-center mb-6">
                       Choose your 1 flashcard
                     </h2>
-                    <pre className="flex gap-20">
+                    <div className="flex gap-20">
                       {/* {flashcardDemo} */}
                       {
                         flashcardDemo.map((card, index) => {
                           return (
-                            <FlipCard card={card} i={index} key={index} />
+                            <div key={index}>
+
+                            <FlipCard cardSelection={flashcardDemo?.length > 0} card={card} i={index} />
+                            {flashcardDemo?.length > 0 && <CardSelectionButton cardSelectFunction={handleSelectFlashCard} id={index} />}
+                            </div>
                           )
                         })
                       }
-                    </pre>
+                    </div>
                   </div>
                 )}
               </div>
