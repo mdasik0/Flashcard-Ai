@@ -4,7 +4,7 @@ import React from "react";
 import { FiCheck } from "react-icons/fi";
 import { TiCancel } from "react-icons/ti";
 
-export default function CardSelectionButton({ id, cardSelectFunction }: { id: number }) {
+export default function CardSelectionButton({ id, cardSelectFunction }: { id: number, cardSelectFunction: (id: number) => void }) {
   const [confirmation, setConfirmation] = React.useState(false);
 
   const handleCancel = () => {

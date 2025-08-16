@@ -1,19 +1,26 @@
 "use client";
 import { GenerateInputProps } from "@/types/flashcard";
+import { useSession } from "next-auth/react";
 import React from "react";
 
-
-
-export default function GenerateInput({ setFlashcards, setError }: GenerateInputProps) {
+export default function GenerateInput({
+  setFlashcards,
+  setError,
+}: GenerateInputProps) {
   const [prompt, setPrompt] = React.useState("");
   const [inputH, setInputH] = React.useState(110);
   const [isFocused, setIsFocused] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-
+  const {status} = useSession();
   const generateCards = async () => {
     if (!prompt.trim()) {
       setError("Please enter a prompt");
+      return;
+    }
+
+    if(status === "unauthenticated"){
+      setError("Please Login First");
       return;
     }
 
@@ -37,7 +44,7 @@ export default function GenerateInput({ setFlashcards, setError }: GenerateInput
       if (!res.ok) {
         throw new Error(data.error || "Failed to generate flashcards");
       }
-console.log(data.flashcards)
+      console.log(data.flashcards);
       setFlashcards(data.flashcards);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");

@@ -21,15 +21,16 @@ export default function Home() {
   }
 ]
 
-  const handleSelectFlashCard = (id: number) => {
+  const handleSelectFlashCard = async (id: number) => {
     // Logic to handle flashcard selection
     console.log("Flashcard selected" + id);
+    // const response = await setFlashCard
   };
 
   return (
     <div>
       <div className="flex items-center justify-center w-[calc(100vw-90px)] px-8">
-        {flashcardDemo || error ? (
+        {flashcards || error ? (
           <>
               <div className="mt-8 max-w-4xl mx-auto px-4">
                 {error && (
@@ -38,20 +39,20 @@ export default function Home() {
                   </div>
                 )}
 
-                {flashcardDemo && (
+                {flashcards && (
                   <div className="rounded-lg shadow p-6">
                     <h2 className="text-3xl font-[500] text-center mb-6">
                       Choose your 1 flashcard
                     </h2>
                     <div className="flex gap-20">
-                      {/* {flashcardDemo} */}
+                      {/* {flashcards} */}
                       {
-                        flashcardDemo.map((card, index) => {
+                        flashcards.map((card, index) => {
                           return (
                             <div key={index}>
 
-                            <FlipCard cardSelection={flashcardDemo?.length > 0} card={card} i={index} />
-                            {flashcardDemo?.length > 0 && <CardSelectionButton cardSelectFunction={handleSelectFlashCard} id={index} />}
+                            <FlipCard cardSelection={flashcards?.length > 0} card={card} i={index} />
+                            {flashcards?.length > 0 && <CardSelectionButton cardSelectFunction={handleSelectFlashCard} id={index} />}
                             </div>
                           )
                         })
