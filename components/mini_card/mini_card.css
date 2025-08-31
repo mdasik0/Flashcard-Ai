@@ -1,0 +1,25 @@
+.mini-card::after{
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 250px;
+    background-color: white;
+    rotate: 25deg;
+    animation: shine 3s 5s infinite;
+    opacity: 15%;
+    backdrop-filter: blur(2px);
+    box-shadow: 20px 20px 20px black;
+}
+.mini-card:hover::after{
+opacity: 0%;
+}
+
+@keyframes shine {
+    0%{
+    bottom: 40%;
+    left:0%;
+    }100%{
+    bottom: -90%;
+    left:90%
+    }
+}
