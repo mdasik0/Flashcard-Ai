@@ -30,7 +30,7 @@ export async function POST(req: Request) {
       }, { status: 400 });
     }
 
-    // Generate flashcards using the enhanced function
+    // Generate flashcards using the enhanced function 
     const result = await generateFlashcards(trimmedInput);
     
     if (!result.success) {
