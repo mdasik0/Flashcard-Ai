@@ -15,8 +15,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const name = "john doe c";
-  const user = false;
   return (
     <html lang="en">
       <body
@@ -25,17 +23,7 @@ export default function RootLayout({
         <AuthProvider>
           <div className="flex justify-start items-center min-h-screen">
             <Navbar />
-            <div className="absolute top-10 right-10 ">
-              {user ? (
-                <div className="border border-[#181818] px-5 py-2 rounded-lg uppercase text-sm duration-300 hover:bg-[#181818] cursor-pointer">
-                  {name.length > 10 ? `${name.slice(0, 10)}...` : name}
-                </div>
-              ) : (
-                <div className="border border-[#181818] px-5 py-2 rounded-lg uppercase text-sm duration-300 hover:bg-[#181818] cursor-pointer">
-                 <AuthButton />
-                </div>
-              )}
-            </div>
+            <AuthButton></AuthButton>
             {children}
           </div>
         </AuthProvider>
