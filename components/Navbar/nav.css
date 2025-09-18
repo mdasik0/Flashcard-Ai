@@ -67,3 +67,30 @@
         .nav-item:hover::after {
             opacity: 1;
         }
+
+        .user-profile {
+    position: relative;
+}
+
+.user-profile::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: -100px ;
+    bottom: 50%;
+    transform: translateY(50%);
+    background-color: #1a1a1a;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.user-profile:hover::after {
+    opacity: 1;
+}
+        

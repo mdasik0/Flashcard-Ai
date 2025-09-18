@@ -5,6 +5,10 @@ import { RiAiGenerate } from "react-icons/ri";
 import { TbPlayCardOff } from "react-icons/tb";
 import "./nav.css";
 import Link from "next/link";
+import logo from "../../public/flashcard-logo-3.png";
+import Image from "next/image";
+import { TiInfoLarge } from "react-icons/ti";
+import { LuUserRound } from "react-icons/lu";
 
 export default function Navbar() {
   useEffect(() => {
@@ -30,24 +34,21 @@ export default function Navbar() {
     }
 
     function applyMagnification(mouseX: number, mouseY: number) {
-      const maxScale = 1.6; // Maximum scale for the closest item
-      const minScale = 0.6; // Minimum scale for distant items
-      const influenceRadius = 200; // Distance within which items are affected
+      const maxScale = 1.6;
+      const minScale = 0.6;
+      const influenceRadius = 200;
 
       navItems.forEach((item) => {
         const distance = calculateDistance(mouseX, mouseY, item);
 
-        // Calculate scale based on distance
         let scale;
         if (distance <= influenceRadius) {
-          // Linear interpolation between maxScale and minScale
           const factor = 1 - distance / influenceRadius;
           scale = minScale + (maxScale - minScale) * factor;
         } else {
-          scale = 1; // Default scale for items outside influence radius
+          scale = 1;
         }
 
-        // Apply transform
         (item as HTMLElement).style.transform = `scale(${scale})`;
       });
     }
@@ -58,97 +59,74 @@ export default function Navbar() {
       });
     }
 
-    // Event handlers
+    // SOLUTION 1: Attach events to the parent container instead of navbar
+
     const handleMouseMove = (e: MouseEvent) => {
-      isHovering = true;
-      applyMagnification(e.clientX, e.clientY);
-    };
+      // Check if mouse is near the navbar area
+      const navRect = navbar.getBoundingClientRect();
+      const buffer = 100; // Extra area around navbar
 
-    const handleMouseEnter = () => {
-      isHovering = true;
-    };
-
-    const handleMouseLeave = () => {
-      isHovering = false;
-      resetMagnification();
-    };
-
-    const handleTransitionEnd = () => {
-      if (!isHovering) {
-        navItems.forEach((item) => {
-          (item as HTMLElement).style.transform = "scale(1)";
-        });
+      if (
+        e.clientX >= navRect.left - buffer &&
+        e.clientX <= navRect.right + buffer &&
+        e.clientY >= navRect.top - buffer &&
+        e.clientY <= navRect.bottom + buffer
+      ) {
+        isHovering = true;
+        applyMagnification(e.clientX, e.clientY);
+      } else {
+        if (isHovering) {
+          isHovering = false;
+          resetMagnification();
+        }
       }
     };
 
-    const handleClick = (index: number, item: Element) => {
-      console.log(
-        `Clicked nav item ${index + 1}: ${
-          (item as HTMLElement).dataset.tooltip
-        }`
-      );
-      // Add your click handling logic here
-    };
-
-    // Add event listeners
-    navbar.addEventListener("mousemove", handleMouseMove);
-    navbar.addEventListener("mouseenter", handleMouseEnter);
-    navbar.addEventListener("mouseleave", handleMouseLeave);
-
-    // Add individual item event listeners
-    const clickHandlers: ((e: Event) => void)[] = [];
-    const transitionHandlers: ((e: Event) => void)[] = [];
-
-    navItems.forEach((item, index) => {
-      const clickHandler = () => handleClick(index, item);
-      const transitionHandler = () => handleTransitionEnd();
-
-      clickHandlers.push(clickHandler);
-      transitionHandlers.push(transitionHandler);
-
-      item.addEventListener("click", clickHandler);
-      item.addEventListener("transitionend", transitionHandler);
-    });
+    document.addEventListener("mousemove", handleMouseMove);
 
     // Cleanup function
     return () => {
-      if (navbar) {
-        navbar.removeEventListener("mousemove", handleMouseMove);
-        navbar.removeEventListener("mouseenter", handleMouseEnter);
-        navbar.removeEventListener("mouseleave", handleMouseLeave);
-      }
-
-      navItems.forEach((item, index) => {
-        if (clickHandlers[index]) {
-          item.removeEventListener("click", clickHandlers[index]);
-        }
-        if (transitionHandlers[index]) {
-          item.removeEventListener("transitionend", transitionHandlers[index]);
-        }
-      });
+      document.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
 
   return (
-    <nav
-      className="navbar min-h-screen flex flex-col items-center justify-center gap-10 px-6"
-      id="navbar"
-    >
-      <Link href={"/"}>
-        <div className="nav-item" data-tooltip="Generate Card">
-          <RiAiGenerate />
+    <div className="flex flex-col items-center justify-between min-h-screen py-6">
+      <div className="w-10 h-10 grid justify-center bg-[#1d1d1d] rounded-xl items-center relative">
+        <Image
+          className="w-9 h-9 absolute object-contain left-1 bottom-1.5"
+          src={logo}
+          alt="flashcard-ai logo"
+        />
+      </div>
+      <nav
+        className="navbar flex flex-col items-center justify-center gap-10 px-6"
+        id="navbar"
+      >
+        <Link href={"/"}>
+          <div className="nav-item" data-tooltip="Generate Card">
+            <RiAiGenerate />
+          </div>
+        </Link>
+        <Link href={"/cards"}>
+          <div className="nav-item" data-tooltip="Cards">
+            <TbPlayCardOff />
+          </div>
+        </Link>
+        <Link href={"/decks"}>
+          <div className="nav-item" data-tooltip="Decks">
+            <GiCardRandom />
+          </div>
+        </Link>
+      </nav>
+      <div className="flex flex-col items-center justify-center gap-6">
+        <div data-tooltip="introduction" className="w-5 h-5 border-2 text-gray-500 hover:text-gray-200 duration-300 cursor-help rounded-full flex items-center justify-center user-profile">
+          <TiInfoLarge className="" />
         </div>
-      </Link>
-      <Link href={"/cards"}>
-        <div className="nav-item" data-tooltip="Cards">
-          <TbPlayCardOff />
+        <div title="User Profile" className="border cursor-pointer w-10 h-10 flex items-center justify-center rounded-full bg-[#1a1a1a] text-gray-400 hover:text-white duration-500">
+          <LuUserRound />
         </div>
-      </Link>
-      <Link href={"/decks"}>
-        <div className="nav-item" data-tooltip="Decks">
-          <GiCardRandom />
-        </div>
-      </Link>
-    </nav>
+      </div>
+    </div>
   );
 }

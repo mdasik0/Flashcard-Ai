@@ -11,15 +11,6 @@ export default function Home() {
   const [error, setError] = React.useState<string | null>(null);
 
   console.log(flashcards)
-//   const flashcardDemo = [{
-//     "question": "What is JavaScript?",
-//     "answer": "JavaScript is a high-level, interpreted programming language that primarily focuses on building web-based applications."
-//   },
-//   {
-//     "question": "What is the purpose of a function in JavaScript?",
-//     "answer": "Functions in JavaScript are used to encapsulate a set of statements to perform a specific task, making code reusable and modular."
-//   }
-// ]
 
   const handleSelectFlashCard = async (id: number) => {
     // Logic to handle flashcard selection
