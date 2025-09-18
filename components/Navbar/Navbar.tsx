@@ -9,6 +9,7 @@ import logo from "../../public/flashcard-logo-3.png";
 import Image from "next/image";
 import { TiInfoLarge } from "react-icons/ti";
 import { LuUserRound } from "react-icons/lu";
+import { useSession } from "next-auth/react";
 
 export default function Navbar() {
   useEffect(() => {
@@ -90,6 +91,7 @@ export default function Navbar() {
     };
   }, []);
 
+  const {data} = useSession();
   return (
     <div className="flex flex-col items-center justify-between min-h-screen py-6">
       <div className="w-10 h-10 grid justify-center bg-[#1d1d1d] rounded-xl items-center relative">
@@ -124,7 +126,10 @@ export default function Navbar() {
           <TiInfoLarge className="" />
         </div>
         <div title="User Profile" className="border cursor-pointer w-10 h-10 flex items-center justify-center rounded-full bg-[#1a1a1a] text-gray-400 hover:text-white duration-500">
-          <LuUserRound />
+          {
+            data?.user?.image ? <Image className="w-full h-full rounded-full border object-cover" width={40} height={40} src={data?.user?.image} alt="user profile picture" /> :
+            <LuUserRound />
+          }
         </div>
       </div>
     </div>

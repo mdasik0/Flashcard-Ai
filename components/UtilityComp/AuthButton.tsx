@@ -11,10 +11,12 @@ export default function AuthButton() {
   console.log(status)
   return (
     <>
+    {/* auth button */}
     {status === "unauthenticated" && <div onClick={() => setIsOpen(!isOpen)} className="flex items-center gap-3 text-[#c5c5c5] hover:bg-[#1a1a1a] duration-300 px-4 py-2 rounded-lg cursor-pointer absolute top-10 right-10">
       <FaRegUserCircle className="text-2xl" />
       Sign in
     </div>}
+    {/* auth modal */}
     {
       isOpen && <div  className='bg-black/60 backdrop-blur-lg w-screen h-screen absolute top-0 left-0 z-50 flex items-center justify-center'>
         <IoMdClose onClick={() => setIsOpen(!isOpen)} className='text-4xl absolute top-10 right-10 cursor-pointer' />
