@@ -9,7 +9,7 @@ import logo from "../../public/flashcard-logo-3.png";
 import Image from "next/image";
 import { TiInfoLarge } from "react-icons/ti";
 import { LuUserRound } from "react-icons/lu";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { PiSignOutBold } from "react-icons/pi";
 
 export default function Navbar() {
@@ -102,6 +102,23 @@ export default function Navbar() {
     }
     setSignoutPopup(!signoutPopup)
   };
+
+  useEffect(() => {
+  const handleClickOutside = (event : MouseEvent) => {
+    const target = event.target as HTMLElement;
+    if (signoutPopup && !target.closest('.signout-popup')) {
+      setSignoutPopup(false);
+    }
+  };
+
+  if (signoutPopup) {
+    document.addEventListener('click', handleClickOutside);
+  }
+
+  return () => {
+    document.removeEventListener('click', handleClickOutside);
+  };
+}, [signoutPopup]);
   return (
     <div className="flex flex-col items-center justify-between min-h-screen py-6">
       <div className="w-10 h-10 grid justify-center bg-[#1d1d1d] rounded-xl items-center relative">
@@ -160,7 +177,7 @@ export default function Navbar() {
             <LuUserRound />
           )}
           
-          <div onClick={() => console.log('i have been clicked')} className={`px-3 py-1.5 rounded-lg bg-red-500 text-white absolute ${signoutPopup ? 'left-15 opacity-100' : '-left-0 opacity-0 pointer-events-none'} duration-200 whitespace-nowrap flex items-center gap-2`}>Sign out <PiSignOutBold /></div>
+          <div onClick={() => signOut()} className={`signout-popup px-3 py-1.5 rounded-lg bg-red-500 text-white absolute ${signoutPopup ? 'left-15 opacity-100' : '-left-0 opacity-0 pointer-events-none'} duration-200 whitespace-nowrap flex items-center gap-2`}>Sign out <PiSignOutBold /></div>
           
         </div>
       </div>
