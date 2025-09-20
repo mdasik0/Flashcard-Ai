@@ -10,8 +10,6 @@ export default function Home() {
   const [flashcards, setFlashcards] = React.useState<Flashcard[] | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
-  console.log(flashcards)
-
   const handleSelectFlashCard = async (id: number) => {
     // Logic to handle flashcard selection
     console.log("Flashcard selected" + id);

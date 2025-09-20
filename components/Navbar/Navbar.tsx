@@ -10,6 +10,7 @@ import Image from "next/image";
 import { TiInfoLarge } from "react-icons/ti";
 import { LuUserRound } from "react-icons/lu";
 import { useSession } from "next-auth/react";
+import { PiSignOutBold } from "react-icons/pi";
 
 export default function Navbar() {
   useEffect(() => {
@@ -91,7 +92,16 @@ export default function Navbar() {
     };
   }, []);
 
-  const {data} = useSession();
+  const { data } = useSession();
+
+  const [signoutPopup, setSignoutPopup] = React.useState(false);
+
+  const signOutButtonPopup = (user: boolean) => {
+    if (!user) {
+      return console.log("User not logged in");
+    }
+    setSignoutPopup(!signoutPopup)
+  };
   return (
     <div className="flex flex-col items-center justify-between min-h-screen py-6">
       <div className="w-10 h-10 grid justify-center bg-[#1d1d1d] rounded-xl items-center relative">
@@ -99,6 +109,11 @@ export default function Navbar() {
           className="w-9 h-9 absolute object-contain left-1 bottom-1.5"
           src={logo}
           alt="flashcard-ai logo"
+          width={36}
+          height={36}
+          fetchPriority="high"
+          loading="eager"
+          decoding="async"
         />
       </div>
       <nav
@@ -122,14 +137,31 @@ export default function Navbar() {
         </Link>
       </nav>
       <div className="flex flex-col items-center justify-center gap-6">
-        <div data-tooltip="introduction" className="w-5 h-5 border-2 text-gray-500 hover:text-gray-200 duration-300 cursor-help rounded-full flex items-center justify-center user-profile">
+        <div
+          data-tooltip="introduction"
+          className="w-5 h-5 border-2 text-gray-500 hover:text-gray-200 duration-300 cursor-help rounded-full flex items-center justify-center user-profile"
+        >
           <TiInfoLarge className="" />
         </div>
-        <div title="User Profile" className="border cursor-pointer w-10 h-10 flex items-center justify-center rounded-full bg-[#1a1a1a] text-gray-400 hover:text-white duration-500">
-          {
-            data?.user?.image ? <Image className="w-full h-full rounded-full border object-cover" width={40} height={40} src={data?.user?.image} alt="user profile picture" /> :
+        <div
+          onClick={() => signOutButtonPopup(data?.user ? true : false)}
+          title="User Profile"
+          className="border cursor-pointer w-10 h-10 flex items-center justify-center rounded-full bg-[#1a1a1a] text-gray-400 hover:text-white duration-500 relative"
+        >
+          {data?.user?.image ? (
+            <Image
+              className="w-full h-full rounded-full border object-cover"
+              width={40}
+              height={40}
+              src={data?.user?.image}
+              alt="user profile picture"
+            />
+          ) : (
             <LuUserRound />
-          }
+          )}
+          
+          <div onClick={() => console.log('i have been clicked')} className={`px-3 py-1.5 rounded-lg bg-red-500 text-white absolute ${signoutPopup ? 'left-15 opacity-100' : '-left-0 opacity-0 pointer-events-none'} duration-200 whitespace-nowrap flex items-center gap-2`}>Sign out <PiSignOutBold /></div>
+          
         </div>
       </div>
     </div>
