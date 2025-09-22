@@ -7,10 +7,8 @@ import "./nav.css";
 import Link from "next/link";
 import logo from "../../public/flashcard-logo-3.png";
 import Image from "next/image";
-import { TiInfoLarge } from "react-icons/ti";
-import { LuUserRound } from "react-icons/lu";
-import { signOut, useSession } from "next-auth/react";
-import { PiSignOutBold } from "react-icons/pi";
+import IntroductionButton from "../UtilityComp/IntroductionButton";
+import UserProfile from "./UserProfile/UserProfile";
 
 export default function Navbar() {
   useEffect(() => {
@@ -91,36 +89,21 @@ export default function Navbar() {
       document.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
+  
+  return (
+    <>
+    <NavForDeskTopLayout />
+    
+    </>
+  );
+}
 
-  const { data } = useSession();
 
-  const [signoutPopup, setSignoutPopup] = React.useState(false);
-
-  const signOutButtonPopup = (user: boolean) => {
-    if (!user) {
-      return console.log("User not logged in");
-    }
-    setSignoutPopup(!signoutPopup)
-  };
-
-  useEffect(() => {
-  const handleClickOutside = (event : MouseEvent) => {
-    const target = event.target as HTMLElement;
-    if (signoutPopup && !target.closest('.signout-popup')) {
-      setSignoutPopup(false);
-    }
-  };
-
-  if (signoutPopup) {
-    document.addEventListener('click', handleClickOutside);
-  }
-
-  return () => {
-    document.removeEventListener('click', handleClickOutside);
-  };
-}, [signoutPopup]);
+export function NavForDeskTopLayout() {
   return (
     <div className="flex flex-col items-center justify-between min-h-screen py-6">
+
+      {/* logo */}
       <div className="w-10 h-10 grid justify-center bg-[#1d1d1d] rounded-xl items-center relative">
         <Image
           className="w-9 h-9 absolute object-contain left-1 bottom-1.5"
@@ -133,7 +116,26 @@ export default function Navbar() {
           decoding="async"
         />
       </div>
-      <nav
+
+      {/* nav items */}
+      <DeskTopAndTabNav />
+
+      {/* utility items */}
+      <div className="flex flex-col items-center justify-center gap-6">
+        <IntroductionButton />
+        <UserProfile />
+      </div>
+
+    </div>
+  )
+}
+
+//TODO: add NavForMobileLayout here later
+
+
+export function DeskTopAndTabNav() {
+  return (
+    <nav
         className="navbar flex flex-col items-center justify-center gap-10 px-6"
         id="navbar"
       >
@@ -153,34 +155,5 @@ export default function Navbar() {
           </div>
         </Link>
       </nav>
-      <div className="flex flex-col items-center justify-center gap-6">
-        <div
-          data-tooltip="introduction"
-          className="w-5 h-5 border-2 text-gray-500 hover:text-gray-200 duration-300 cursor-help rounded-full flex items-center justify-center user-profile"
-        >
-          <TiInfoLarge className="" />
-        </div>
-        <div
-          onClick={() => signOutButtonPopup(data?.user ? true : false)}
-          title="User Profile"
-          className="border cursor-pointer w-10 h-10 flex items-center justify-center rounded-full bg-[#1a1a1a] text-gray-400 hover:text-white duration-500 relative"
-        >
-          {data?.user?.image ? (
-            <Image
-              className="w-full h-full rounded-full border object-cover"
-              width={40}
-              height={40}
-              src={data?.user?.image}
-              alt="user profile picture"
-            />
-          ) : (
-            <LuUserRound />
-          )}
-          
-          <div onClick={() => signOut()} className={`signout-popup px-3 py-1.5 rounded-lg bg-red-500 text-white absolute ${signoutPopup ? 'left-15 opacity-100' : '-left-0 opacity-0 pointer-events-none'} duration-200 whitespace-nowrap flex items-center gap-2`}>Sign out <PiSignOutBold /></div>
-          
-        </div>
-      </div>
-    </div>
-  );
+  )
 }
