@@ -5,14 +5,18 @@ import { FaRegUserCircle } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc';
 import { IoMdClose } from 'react-icons/io';
 
-export default function AuthButton() {
+type AuthButtonProps = {
+  desktop: boolean
+}
+
+export default function AuthButton({desktop} : AuthButtonProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const {status} = useSession();
   console.log(status)
   return (
     <>
     {/* auth button */}
-    {status === "unauthenticated" && <div onClick={() => setIsOpen(!isOpen)} className="flex items-center gap-3 text-[#c5c5c5] hover:bg-[#1a1a1a] duration-300 px-4 py-2 rounded-lg cursor-pointer absolute top-10 right-10">
+    {status === "unauthenticated" && <div onClick={() => setIsOpen(!isOpen)} className={`flex items-center gap-3 text-[#c5c5c5] hover:bg-[#1a1a1a] duration-300 px-4 py-2 rounded-lg cursor-pointer ${desktop ? 'absolute top-6 right-10 ' : ''}`}>
       <FaRegUserCircle className="text-2xl" />
       Sign in
     </div>}

@@ -9,6 +9,7 @@ import logo from "../../public/flashcard-logo-3.png";
 import Image from "next/image";
 import IntroductionButton from "../UtilityComp/IntroductionButton";
 import UserProfile from "./UserProfile/UserProfile";
+import AuthButton from "../UtilityComp/AuthButton";
 
 export default function Navbar() {
   useEffect(() => {
@@ -89,22 +90,23 @@ export default function Navbar() {
       document.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
-  
+
   return (
     <>
-    <NavForDeskTopLayout />
-    {/* <NavForMobileLayout /> */}
+      <NavForDeskTopLayout />
+      <NavForMobileLayout />
     </>
   );
 }
 
-
 export function NavForDeskTopLayout() {
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen py-6">
-
+    <div className="hidden md:flex flex-col items-center justify-between min-h-screen py-6">
       {/* logo */}
-      <div className="w-10 h-10 grid justify-center bg-[#1d1d1d] rounded-xl items-center relative">
+      <div
+        data-tooltip="Flashcard - Ai"
+        className="w-10 h-10 grid justify-center bg-[#1d1d1d] rounded-xl items-center relative logo-tooltip"
+      >
         <Image
           className="w-9 h-9 absolute object-contain left-1 bottom-1.5"
           src={logo}
@@ -125,35 +127,62 @@ export function NavForDeskTopLayout() {
         <IntroductionButton />
         <UserProfile />
       </div>
-
     </div>
-  )
+  );
+}
+
+export function NavForMobileLayout() {
+  return (
+    <div className="md:hidden block">
+      <div className="absolute top-0 left-0 w-full flex justify-between items-center p-3">
+        {/* logo */}
+        <div
+          data-tooltip="Flashcard - Ai"
+          className="w-10 h-10 grid justify-center bg-[#1d1d1d] rounded-xl items-center relative logo-tooltip"
+        >
+          <Image
+            className="w-9 h-9 absolute object-contain left-1 bottom-1.5"
+            src={logo}
+            alt="flashcard-ai logo"
+            width={36}
+            height={36}
+            fetchPriority="high"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+        <AuthButton desktop={false} />
+      </div>
+      <div className=" absolute bottom-0 right-0 w-full h-18 border-2 border-red-500">
+        for later after internet comes
+      </div>
+    </div>
+  );
 }
 
 //TODO: add NavForMobileLayout here later
 
-
 export function DeskTopAndTabNav() {
   return (
     <nav
-        className="navbar flex flex-col items-center justify-center gap-10 px-6"
-        id="navbar"
-      >
-        <Link href={"/"}>
-          <div className="nav-item" data-tooltip="Generate Card">
-            <RiAiGenerate />
-          </div>
-        </Link>
-        <Link href={"/cards"}>
-          <div className="nav-item" data-tooltip="Cards">
-            <TbPlayCardOff />
-          </div>
-        </Link>
-        <Link href={"/decks"}>
-          <div className="nav-item" data-tooltip="Decks">
-            <GiCardRandom />
-          </div>
-        </Link>
-      </nav>
-  )
+      className="navbar flex flex-col items-center justify-center gap-10 px-6"
+      id="navbar"
+    >
+      <Link href={"/"}>
+        <div className="nav-item" data-tooltip="Generate Card">
+          <RiAiGenerate />
+        </div>
+      </Link>
+      <Link href={"/cards"}>
+        <div className="nav-item" data-tooltip="Cards">
+          <TbPlayCardOff />
+        </div>
+      </Link>
+      <Link href={"/decks"}>
+        <div className="nav-item" data-tooltip="Decks">
+          <GiCardRandom />
+        </div>
+      </Link>
+    </nav>
+  );
 }

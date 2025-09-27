@@ -72,14 +72,12 @@
     position: relative;
 }
 
-.user-profile::after {
+.user-profile::after , .logo-tooltip::after {
     content: attr(data-tooltip);
     position: absolute;
-    right: -100px ;
     bottom: 50%;
     transform: translateY(50%);
     background-color: #1a1a1a;
-    color: white;
     padding: 6px 10px;
     border-radius: 6px;
     font-size: 12px;
@@ -90,7 +88,23 @@
     transition: opacity 0.3s ease;
 }
 
-.user-profile:hover::after {
+.user-profile::after {
+    right: -100px ;
+    color: white;
+
+}
+
+.logo-tooltip::after {
+    right: -120px;
+    color: white;
+
+}
+
+.logo-tooltip::after {
+    text-transform: uppercase;
+}
+
+.user-profile:hover::after , .logo-tooltip:hover::after {
     opacity: 1;
 }
         
