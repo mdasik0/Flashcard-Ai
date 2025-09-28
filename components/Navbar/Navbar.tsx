@@ -10,6 +10,8 @@ import Image from "next/image";
 import IntroductionButton from "../UtilityComp/IntroductionButton";
 import UserProfile from "./UserProfile/UserProfile";
 import AuthButton from "../UtilityComp/AuthButton";
+import { usePathname } from 'next/navigation';
+import { useSession } from "next-auth/react";
 
 export default function Navbar() {
   useEffect(() => {
@@ -101,7 +103,7 @@ export default function Navbar() {
 
 export function NavForDeskTopLayout() {
   return (
-    <div className="hidden md:flex flex-col items-center justify-between min-h-screen py-6">
+    <div className="hidden sm:flex flex-col items-center justify-between min-h-screen py-6">
       {/* logo */}
       <div
         data-tooltip="Flashcard - Ai"
@@ -132,8 +134,11 @@ export function NavForDeskTopLayout() {
 }
 
 export function NavForMobileLayout() {
+      const pathname = usePathname();
+        const { data } = useSession();
+      
   return (
-    <div className="md:hidden block">
+    <div className="sm:hidden block">
       <div className="absolute top-0 left-0 w-full flex justify-between items-center p-3">
         {/* logo */}
         <div
@@ -151,12 +156,34 @@ export function NavForMobileLayout() {
             decoding="async"
           />
         </div>
-        <AuthButton desktop={false} />
+        {data?.user ? <UserProfile /> : <AuthButton desktop={false} />}
       </div>
-      <div className=" absolute bottom-0 right-0 w-full h-18 border-2 border-red-500">
-        for later after internet comes
+      <div className="absolute bottom-0 right-0 w-full max-w-[640px] flex items-center justify-center">
+        <nav className="relative h-18 w-[350px] flex items-center justify-center">
+          <ul className="flex items-center justify-center gap-6 w-[350px] bg-[#191919] rounded-xl duration-300">
+            <li className={`indicator absolute w-16 h-16 bg-[#1a1a1a] -translate-y-[35px] duration-300 ease-in-out border-6 border-[#0A0A0A] ${pathname === '/' ? 'translate-x-[-94px]' : pathname === '/cards' ? 'translate-x-[0px]' : pathname === '/decks' ? 'translate-x-[94px]' : ''} rounded-full`}></li>
+            <li className="relative list-none w-[70px] h-[70px] z-[1]">
+              <Link className="relative flex items-center justify-center flex-col h-full text-center font-[500]" href={"/"}>
+                <span className={`relative block leading-[75px] text-[2em] ${pathname === '/' ? '-translate-y-9' : ''} text-center duration-150`}><RiAiGenerate /></span>
+                <span className={`absolute text-[0.90em] font-bold duration-200 ${pathname !== '/' ? 'opacity-0' : 'translate-y-3 opacity-100'}`}>Generate</span>
+              </Link>
+            </li>
+            <li className="relative list-none w-[70px] h-[70px] z-[1]">
+              <Link className="relative flex items-center justify-center flex-col h-full text-center font-[500]" href={"/cards"}>
+                <span className={`relative block leading-[75px] text-[2em] ${pathname === '/cards' ? '-translate-y-9' : ''} text-center duration-150`}><TbPlayCardOff /></span>
+                <span className={`absolute text-[0.90em] font-bold duration-200 ${pathname !== '/cards' ? 'opacity-0' : 'translate-y-3 opacity-100'}`}>Cards</span>
+              </Link>
+            </li>
+            <li className="relative list-none w-[70px] h-[70px] z-[1]">
+              <Link className="relative flex items-center justify-center flex-col h-full text-center font-[500]" href={"/decks"}>
+                <span className={`relative block leading-[75px] text-[2em] ${pathname === '/decks' ? '-translate-y-9' : ''} text-center duration-150`}><GiCardRandom /></span>
+                <span className={`absolute text-[0.90em] font-bold duration-200 ${pathname !== '/decks' ? 'opacity-0' : 'translate-y-3 opacity-100'}`}>Decks</span>
+              </Link>
+            </li>
+          </ul>
+        </nav>
       </div>
-    </div>
+      </div>
   );
 }
 

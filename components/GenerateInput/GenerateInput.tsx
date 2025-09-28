@@ -69,7 +69,7 @@ export default function GenerateInput({
     }
   }, [prompt]);
   return (
-    <div className="hidden md:block input-container relative">
+    <div className="hidden sm:block input-container relative">
       <textarea
         ref={textareaRef}
         value={prompt}

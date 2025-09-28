@@ -23,7 +23,7 @@ export default function RootLayout({
         <AuthProvider>
           <div className="flex justify-start items-center min-h-screen">
             <Navbar />
-            <div className="hidden md:block">
+            <div className="hidden sm:block">
               <AuthButton desktop={true} />
             </div>
             {children}

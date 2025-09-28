@@ -107,4 +107,24 @@
 .user-profile:hover::after , .logo-tooltip:hover::after {
     opacity: 1;
 }
-        
+
+.indicator::after, .indicator::before {
+    content: "";
+    width: 15px;
+    height: 15px;
+    background-color: #191919;
+    /* background-color: red; */
+    position: absolute;
+    top: 26px;
+}
+.indicator::before {
+    left: -18px;
+    /* box-shadow: 0 -10px 0 0 #0A0A0A; */
+    box-shadow: 3px -3px 0 0 #0A0A0A;
+    border-top-right-radius: 100%;
+}
+.indicator::after {
+    right: -18px;
+    box-shadow: -3px -3px 0 0 #0A0A0A;
+    border-top-left-radius: 100px;
+}
