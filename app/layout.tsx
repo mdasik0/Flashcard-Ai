@@ -21,7 +21,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <div className="flex justify-start items-center min-h-screen">
+          <div className="flex justify-center  sm:justify-start items-center min-h-screen">
             <Navbar />
             <div className="hidden sm:block">
               <AuthButton desktop={true} />

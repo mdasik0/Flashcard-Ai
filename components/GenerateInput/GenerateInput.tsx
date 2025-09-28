@@ -69,7 +69,7 @@ export default function GenerateInput({
     }
   }, [prompt]);
   return (
-    <div className="hidden sm:block input-container relative">
+    <div className="block input-container relative">
       <textarea
         ref={textareaRef}
         value={prompt}
@@ -77,14 +77,14 @@ export default function GenerateInput({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         onKeyDown={handleKeyDown}
-        className="bg-[#0e0e0e] w-[500px] min-h-[24px] max-h-[200px] resize-none overflow-hidden rounded-xl p-4 absolute left-[6px] top-[6px] focus:outline-0 text-white z-10"
-        placeholder="Enter a topic to generate flashcards... (Ctrl+Enter to submit)"
+        className="bg-[#0e0e0e] w-[312px] sm:w-[500px] min-h-[24px] max-h-[200px] resize-none overflow-hidden rounded-xl p-4 absolute left-[6px] top-[6px] focus:outline-0 text-white z-10"
+        placeholder="Enter a topic to generate flashcards..."
         rows={1}
         style={{ lineHeight: "1.5" }}
         disabled={isLoading}
       />
       <div
-        className="animated-container bg-[#302f2f] w-[512px] max-h-[254px] rounded-2xl px-2 flex flex-col items-start justify-end transition-all duration-300"
+        className="animated-container bg-[#302f2f] w-[324px] sm:w-[512px] max-h-[254px] rounded-2xl px-2 flex flex-col items-start justify-end transition-all duration-300"
         style={{
           height: isFocused || prompt ? `${inputH}px` : "68px",
           opacity: isFocused || prompt ? 1 : 0.4,

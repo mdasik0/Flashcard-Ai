@@ -10,7 +10,7 @@ export default function Home() {
   const [flashcards, setFlashcards] = React.useState<Flashcard[] | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
-  const handleSelectFlashCard = async (id: number) => {
+  const handleSaveFlashcardToDeck = async (id: number) => {
     // Logic to handle flashcard selection
     console.log("Flashcard selected" + id);
     // const response = await setFlashCard
@@ -41,7 +41,7 @@ export default function Home() {
                             <div key={index}>
 
                             <FlipCard cardSelection={flashcards?.length > 0} card={card} i={index} />
-                            {flashcards?.length > 0 && <CardSelectionButton cardSelectFunction={handleSelectFlashCard} id={index} />}
+                            {flashcards?.length > 0 && <CardSelectionButton cardSelectFunction={handleSaveFlashcardToDeck} id={index} />}
                             </div>
                           )
                         })
