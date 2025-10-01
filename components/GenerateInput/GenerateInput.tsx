@@ -34,13 +34,13 @@ export default function GenerateInput({
     setFlashcards(null);
     // call api to generate flashcards
     try {
-      const res = await fetch("/api/flashcards", {
+      const res = await fetch("http://localhost:5000/api/ai/generate-flashcard", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          input: prompt,
+          question : prompt,
         }),
       });
       // turn the response into json
@@ -50,8 +50,8 @@ export default function GenerateInput({
         throw new Error(data.error || "Failed to generate flashcards");
       }
       // set flashcards state with the generated flashcards
-      console.log(data.flashcards);
-      setFlashcards(data.flashcards);
+      console.log(data);
+      setFlashcards(data?.response);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
