@@ -52,6 +52,7 @@ export default function GenerateInput({
       // set flashcards state with the generated flashcards
       console.log(data);
       setFlashcards(data?.response);
+      localStorage.setItem('lastGeneratedFlashcard', JSON.stringify(data?.response));
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
