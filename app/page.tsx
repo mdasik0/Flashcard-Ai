@@ -79,6 +79,7 @@ export default function Home() {
                     {/* {flashcards} */}
                     <FlipCard cardSelection={true} card={flashcard} i={0} />
                     <CardSelectionButton
+                      setFlashcards={setFlashcards}
                       cardSelectFunction={() => setDeckModal(true)}
                       id={0}
                     />
