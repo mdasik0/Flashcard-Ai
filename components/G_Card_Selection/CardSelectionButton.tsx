@@ -1,5 +1,6 @@
 "use client";
 import { roboto } from "@/lib/fonts";
+import { Deck, GetDeckApiRes, PostDeckApiRes } from "@/types/deck";
 import { Flashcard } from "@/types/flashcard";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useRef } from "react";
@@ -11,14 +12,6 @@ import {
 } from "react-icons/fa";
 import { IoIosSave, IoMdClose } from "react-icons/io";
 import { MdOutlineCancel } from "react-icons/md";
-type DeckObj = {
-  _id: string;
-  deckName: string;
-  creatorId: string;
-  deckImage?: string;
-  privacy: boolean;
-  updatedAt: Date;
-};
 
 type CardSelectionButtonProps = {
   setFlashcards: React.Dispatch<React.SetStateAction<Flashcard | null>>;
@@ -34,7 +27,7 @@ export default function CardSelectionButton({
     deckName: "",
     deckId: "",
   });
-  const [decks, setDecks] = React.useState<DeckObj[] | []>([]);
+  const [decks, setDecks] = React.useState<Deck[] | []>([]);
   const [loading, setLoading] = React.useState({
     createDeck: false,
     decksFetch: false,
@@ -68,7 +61,7 @@ export default function CardSelectionButton({
         const response = await fetch(
           `http://localhost:5000/api/decks/${data.user.id}`
         );
-        const result = await response.json();
+        const result: GetDeckApiRes<Deck[]> = await response.json();
         setDecks(result.data);
       } catch (error) {
         console.error("Error fetching decks:", error);
@@ -93,7 +86,7 @@ export default function CardSelectionButton({
         },
         body: JSON.stringify(deckData),
       });
-      const result = await response.json();
+      const result: PostDeckApiRes<Deck> = await response.json();
       setLoading({ ...loading, createDeck: false });
       setInput("");
       setDecks([...decks, result?.data]);
