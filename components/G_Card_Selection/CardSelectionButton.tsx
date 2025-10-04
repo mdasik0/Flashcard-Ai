@@ -21,28 +21,23 @@ export default function CardSelectionButton({
   handleSaveFlashCard,
   setFlashcards,
 }: CardSelectionButtonProps) {
-  // deck dropdown state
   const [open, setOpen] = React.useState<boolean>(false);
-  const [selectedDeck, setSelectedDeck] = React.useState({
-    deckName: "",
-    deckId: "",
-  });
   const [decks, setDecks] = React.useState<Deck[] | []>([]);
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [input, setInput] = React.useState("");
+  const { data, status } = useSession();
   const [loading, setLoading] = React.useState({
     createDeck: false,
     decksFetch: false,
   });
-  // new deck modal state
-  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
-  const [input, setInput] = React.useState("");
-  const { data, status } = useSession();
-  const handleCancelSave = () => {
-    setFlashcards(null);
-    localStorage.removeItem("lastGeneratedFlashcard");
-  };
+  const [selectedDeck, setSelectedDeck] = React.useState({
+    deckName: "",
+    deckId: "",
+  });
 
+  // used for fetch all decks for > select deck dropdown
   useEffect(() => {
-    // ✅ Wait for authentication to complete
+    // Wait for authentication to complete
     if (status === "loading") {
       return; // Still loading user data
     }
@@ -71,6 +66,29 @@ export default function CardSelectionButton({
     fetchDecks();
   }, [data?.user?.id, status]);
 
+  // drop down behavior control > select deck dropdown
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  // drop down behavior control useEffect > select deck dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    // Cleanup
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
+
+  // for creating new deck for > select deck dropdown
   const handleCreateNewDeck = async () => {
     const deckData = {
       deckName: input,
@@ -100,34 +118,18 @@ export default function CardSelectionButton({
     }
   };
 
-  // drop down behavior control
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
-      }
-    };
-    if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    // Cleanup
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [open]);
+  // cancel button
+  const handleCancelSave = () => {
+    setFlashcards(null);
+    localStorage.removeItem("lastGeneratedFlashcard");
+  };
 
   return (
     <>
-      {/* buttons */}
       <div className="flex gap-4 items-center justify-center mt-4">
-        {/* save button */}
+        {/* select deck put in ref div for better control over dropdown*/}
         <div ref={dropdownRef} className={`relative ${roboto.className}`}>
+          {/* select deck button */}
           <button
             onClick={() => setOpen(!open)}
             className={`flex items-center relative text-green-500 font-[500] tracking-wider gap-1 font- ps-3 pe-7 py-2 bg-[#181818] hover:bg-[#272727] duration-300 cursor-pointer active:scale-95 rounded`}
@@ -144,11 +146,9 @@ export default function CardSelectionButton({
               }`}
             />
           </button>
+          {/* deck dropdown */}
           {open && (
             <div className="absolute text-center bottom-12 left-0 w-[160px] h-fit rounded-lg p-1.5  bg-[#0E0E0E] border border-[#181818] text-white flex flex-col gap-1.5 items-center">
-              {/* show dynamic deck */}
-              {}
-              {/* all decks fetched data here */}
               {decks?.map((deck) => {
                 return (
                   <button
@@ -172,7 +172,7 @@ export default function CardSelectionButton({
                   </button>
                 );
               })}
-
+              {/* create new deck button which opens new modal */}
               <button
                 onClick={() => setModalOpen(true)}
                 className=" bg-[#181818] hover:bg-[#1d1d1d] duration-300 active:scale-95 cursor-pointer text-sm font-medium w-full py-1.5 px-3 rounded flex items-center justify-center gap-2 text-nowrap"
@@ -183,6 +183,7 @@ export default function CardSelectionButton({
           )}
         </div>
 
+        {/* save button */}
         <button
           onClick={() =>
             handleSaveFlashCard(selectedDeck.deckName, selectedDeck.deckId)
@@ -204,6 +205,7 @@ export default function CardSelectionButton({
           <MdOutlineCancel />
           cancel
         </button>
+        {/* create new deck modal */}
         {modalOpen && (
           <div className="w-screen h-screen absolute top-0 left-0 bg-black/30 backdrop-blur-lg flex items-center justify-center">
             <div className="w-[300px] h-[300px] rounded-xl p-4 bg-[#111111] border-4 border-[#181818] flex flex-col items-start justify-between gap-3 relative">
