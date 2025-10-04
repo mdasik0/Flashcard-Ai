@@ -1,6 +1,7 @@
 "use client";
 import { roboto } from "@/lib/fonts";
 import { Flashcard } from "@/types/flashcard";
+import { useSession } from "next-auth/react";
 import React, { useEffect, useRef } from "react";
 import {
   FaCaretDown,
@@ -10,37 +11,100 @@ import {
 } from "react-icons/fa";
 import { IoIosSave, IoMdClose } from "react-icons/io";
 import { MdOutlineCancel } from "react-icons/md";
+type DeckObj = {
+  _id: string;
+  deckName: string;
+  creatorId: string;
+  deckImage?: string;
+  privacy: boolean;
+  updatedAt: Date;
+};
 
 type CardSelectionButtonProps = {
-  id: number;
-  cardSelectFunction: (id: number) => void;
   setFlashcards: React.Dispatch<React.SetStateAction<Flashcard | null>>;
+  handleSaveFlashCard: (deckName: string, deckId: string) => void;
 };
 export default function CardSelectionButton({
-  id,
-  cardSelectFunction,
+  handleSaveFlashCard,
   setFlashcards,
 }: CardSelectionButtonProps) {
   // deck dropdown state
   const [open, setOpen] = React.useState<boolean>(false);
-  const [selectedDeck, setSelectedDeck] = React.useState<string | null>(null);
+  const [selectedDeck, setSelectedDeck] = React.useState({
+    deckName: "",
+    deckId: "",
+  });
+  const [decks, setDecks] = React.useState<DeckObj[] | []>([]);
+  const [loading, setLoading] = React.useState({
+    createDeck: false,
+    decksFetch: false,
+  });
   // new deck modal state
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [input, setInput] = React.useState("");
-  const deckname = "Sample Deck 123";
+  const { data, status } = useSession();
   const handleCancelSave = () => {
     setFlashcards(null);
     localStorage.removeItem("lastGeneratedFlashcard");
   };
 
-  const setDeck = (name: string) => {
-    setSelectedDeck(name);
-    //TODO: send it to save flashcard function to form an object
-    setOpen(false);
-  };
+  useEffect(() => {
+    // ✅ Wait for authentication to complete
+    if (status === "loading") {
+      return; // Still loading user data
+    }
 
-  const handleCreateNewDeck = () => {
-    console.log("deck", input);
+    if (status === "unauthenticated") {
+      console.log("User not authenticated");
+      return;
+    }
+
+    if (!data?.user?.id) {
+      return;
+    }
+
+    const fetchDecks = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/decks/${data.user.id}`
+        );
+        const result = await response.json();
+        setDecks(result.data);
+      } catch (error) {
+        console.error("Error fetching decks:", error);
+      }
+    };
+
+    fetchDecks();
+  }, [data?.user?.id, status]);
+
+  const handleCreateNewDeck = async () => {
+    const deckData = {
+      deckName: input,
+      creatorId: data?.user?.id,
+      privacy: false,
+    };
+    setLoading({ ...loading, createDeck: true });
+    try {
+      const response = await fetch("http://localhost:5000/api/deck", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(deckData),
+      });
+      const result = await response.json();
+      setLoading({ ...loading, createDeck: false });
+      setInput("");
+      setDecks([...decks, result?.data]);
+      setModalOpen(false);
+    } catch (error) {
+      setLoading({ ...loading, createDeck: false });
+      const errorMessage =
+        error instanceof Error ? error.message : "An unexpected error occurred";
+
+      console.error("Error:", errorMessage);
+    }
   };
 
   // drop down behavior control
@@ -64,6 +128,7 @@ export default function CardSelectionButton({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [open]);
+
   return (
     <>
       {/* buttons */}
@@ -74,7 +139,7 @@ export default function CardSelectionButton({
             onClick={() => setOpen(!open)}
             className={`flex items-center relative text-green-500 font-[500] tracking-wider gap-1 font- ps-3 pe-7 py-2 bg-[#181818] hover:bg-[#272727] duration-300 cursor-pointer active:scale-95 rounded`}
           >
-            {selectedDeck ? (
+            {selectedDeck.deckId ? (
               <FaRegCheckCircle className="text-lg" />
             ) : (
               <FaRegCircle className="text-lg" />
@@ -90,17 +155,30 @@ export default function CardSelectionButton({
             <div className="absolute text-center bottom-12 left-0 w-[160px] h-fit rounded-lg p-1.5  bg-[#0E0E0E] border border-[#181818] text-white flex flex-col gap-1.5 items-center">
               {/* show dynamic deck */}
               {}
-
-              <button
-                onClick={() => setDeck(deckname)}
-                className={`bg-[#181818] hover:bg-[#1d1d1d] ${
-                  selectedDeck ? "text-green-400" : "text-white"
-                } duration-300 active:scale-95 cursor-pointer text-sm font-medium w-full py-1.5 px-3 rounded flex items-center justify-center gap-2 text-nowrap`}
-              >
-                {deckname.length > 15
-                  ? deckname.slice(0, 15) + "..."
-                  : deckname}
-              </button>
+              {/* all decks fetched data here */}
+              {decks?.map((deck) => {
+                return (
+                  <button
+                    key={deck._id}
+                    onClick={() =>
+                      setSelectedDeck({
+                        ...selectedDeck,
+                        deckName: deck.deckName,
+                        deckId: deck._id,
+                      })
+                    }
+                    className={`bg-[#181818] hover:bg-[#1d1d1d] ${
+                      selectedDeck.deckId === deck._id
+                        ? "text-green-400"
+                        : "text-white"
+                    } duration-300 active:scale-95 cursor-pointer text-sm font-medium w-full py-1.5 px-3 rounded flex items-center justify-center gap-2 text-nowrap`}
+                  >
+                    {deck.deckName.length > 15
+                      ? deck.deckName.slice(0, 15) + "..."
+                      : deck.deckName}
+                  </button>
+                );
+              })}
 
               <button
                 onClick={() => setModalOpen(true)}
@@ -113,8 +191,13 @@ export default function CardSelectionButton({
         </div>
 
         <button
-          disabled={!selectedDeck}
-          title={selectedDeck ? "Save Flashcard" : "Select a deck to save"}
+          onClick={() =>
+            handleSaveFlashCard(selectedDeck.deckName, selectedDeck.deckId)
+          }
+          disabled={!selectedDeck.deckId}
+          title={
+            selectedDeck.deckId ? "Save Flashcard" : "Select a deck to save"
+          }
           className={`flex items-center disabled:text-[#505050] disabled:cursor-not-allowed ${roboto.className} text-green-500 font-[500] tracking-wider gap-1 font- px-5 py-2 bg-[#181818] hover:bg-[#272727] duration-300 cursor-pointer active:scale-95 rounded`}
         >
           <IoIosSave className="text-lg" />
@@ -159,8 +242,14 @@ export default function CardSelectionButton({
                 onClick={handleCreateNewDeck}
                 className="flex gap-1 items-center px-5 py-2 rounded shadow shadow-black/20 bg-[#181818] hover:bg-[#272727] duration-300 cursor-pointer active:scale-95"
               >
-                Create Deck
-                <FaPlus />
+                {loading.createDeck ? (
+                  <>Creating...</>
+                ) : (
+                  <>
+                    Create Deck
+                    <FaPlus />
+                  </>
+                )}
               </button>
               <div
                 onClick={() => setModalOpen(false)}

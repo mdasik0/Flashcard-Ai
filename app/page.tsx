@@ -16,46 +16,16 @@ export default function Home() {
     lastGeneratedFlashcard || null
   );
   const [error, setError] = React.useState<string | null>(null);
-  const [deckModal, setDeckModal] = React.useState(false);
   // user email for user id
   const { data: session } = useSession();
-  const userId = session?.user?.email;
-  //TODO: select or create deck to save to
+  const userId = session?.user?.id;
 
-  // function to handle flashcard selection
-  const handleSaveFlashcardToDeck = async (id: number) => {
-    // Logic to handle flashcard selection
-    if (!flashcard?.question || !flashcard?.answer)
-      return alert("No flashcard to save");
-    // during save add an option to select or create a deck to save to
-    if (!userId) return alert("User not logged in");
-
-    // try {
-    //   // api call
-    //   const response = await fetch("http://localhost:5000/api/flashcard", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       question: flashcard.question,
-    //       answer: flashcard.answer,
-    //     }),
-    //   });
-
-    //   if (!response.ok) {
-    //     throw new Error("Failed to save flashcard");
-    //   }
-
-    //   const data = await response.json();
-    //   console.log("Flashcard saved successfully:", data);
-
-    //   // Optionally, you can provide user feedback here
-    // } catch (error) {
-    //   console.log("there was an error trying to save the flashcard", error);
-    // }
-    console.log("Flashcard selected" + id);
-    // const response = await setFlashCard
+  const handleSaveFlashCard = (deckName: string, deckId: string) => {
+    const newObj = { ...flashcard, userId, deckName, deckId };
+    console.log("full flashcard", newObj);
+    // TODO: call api to save flashcard
+    // TODO: now remove the last Flashcard from localstorage.
+    // TODO: clear flashcard state
   };
 
   return (
@@ -79,9 +49,8 @@ export default function Home() {
                     {/* {flashcards} */}
                     <FlipCard cardSelection={true} card={flashcard} i={0} />
                     <CardSelectionButton
+                      handleSaveFlashCard={handleSaveFlashCard}
                       setFlashcards={setFlashcards}
-                      cardSelectFunction={() => setDeckModal(true)}
-                      id={0}
                     />
                   </div>
                 </div>
@@ -92,9 +61,6 @@ export default function Home() {
           <GenerateInput setFlashcards={setFlashcards} setError={setError} />
         )}
       </div>
-      {deckModal && 
-      <div className="absolute top-0 left-0 w-screen h-screen bg-black/30 backdrop:blur-md flex items-center justify-center">
-        </div>}
     </div>
   );
 }
