@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import "./flipCard.css";
+import "./flashcard.css";
 import { roboto } from "@/lib/fonts";
 import { Flashcard } from "@/types/flashcard";
 

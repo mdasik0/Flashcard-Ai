@@ -1,6 +1,22 @@
 export type Flashcard = {
-    question: string;
-    answer: string;
+  question: string;
+  answer: string;
+}
+  
+  export type fetchedFlashcard = {
+  _id: string;
+  question: string;
+  answer: string;
+  deckId: string;
+  deckName: string;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type PostFleshCardApiRes = {
+  success: string;
+  message: string;
 }
 
 export interface GenerateInputProps {
