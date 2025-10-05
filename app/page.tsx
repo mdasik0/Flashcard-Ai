@@ -55,10 +55,10 @@ export default function Home() {
 
   return (
     <div>
-      <div className="flex items-center justify-center w-[calc(100vw-90px)] px-8">
+      <div className="flex sm:flex-row flex-col items-center justify-center sm:w-[calc(100vw-90px)] px-8">
         {flashcard || error ? (
           <>
-            <div className="mt-8 max-w-4xl mx-auto px-4">
+            <div className="sm:mt-8 max-w-4xl mx-auto sm:px-4">
               {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                   {error}
@@ -66,8 +66,8 @@ export default function Home() {
               )}
 
               {flashcard && (
-                <div className="rounded-lg shadow p-6">
-                  <h2 className="text-3xl font-[500] text-center mb-6">
+                <div className="rounded-lg shadow sm:p-6">
+                  <h2 className="text-xl sm:text-3xl font-[500] text-center sm:mb-6 sm:mt-0 -mt-16 mb-3">
                     Save Your Flashcard
                   </h2>
                   <div className="flex flex-col">

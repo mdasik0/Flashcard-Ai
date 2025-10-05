@@ -7,8 +7,7 @@
 /* The flip card wrapper */
 .flip-card {
   position: relative;
-  width: 350px;
-  height: 500px;
+  
   transform-style: preserve-3d;
   transition: transform 0.6s ease-in-out;
 }
