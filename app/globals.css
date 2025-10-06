@@ -24,3 +24,64 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.background-color {
+  background: rebeccapurple;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 100px;
+  height: 150px;
+  z-index: 90;
+  animation: habluAnim 0.8s ease-out forwards;
+}
+
+@keyframes habluAnim {
+  0% {
+    rotate: 45deg;
+  }
+  60% {
+    translate: 200px -420px;
+    width: 150px;
+    height: 250px;
+    z-index: 100;
+  }
+  100% {
+    z-index: 100;
+    width: 250px;
+    height: 400px;
+  }
+}
+
+.slide-back {
+  background: rebeccapurple;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  z-index: 110;
+  width: 250px;
+  height: 400px;
+  animation: slide-back 0.7s ease-in forwards;
+}
+
+@keyframes slide-back {
+  0% {
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+  }
+  60% {
+    top: 50%;
+    left: 75%;
+    width: 150px;
+    height: 250px;
+    z-index: 90;
+  }
+  100% {
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 150px;
+    z-index: 90;
+  }
+}
