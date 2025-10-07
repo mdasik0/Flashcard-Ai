@@ -8,13 +8,21 @@ import { useSession } from "next-auth/react";
 import React from "react";
 
 export default function Home() {
-  const LastGen_FCString = localStorage.getItem("lastGeneratedFlashcard");
-  const lastGeneratedFlashcard = LastGen_FCString
-    ? (JSON.parse(LastGen_FCString) as Flashcard)
-    : null;
-  const [flashcard, setFlashcards] = React.useState<Flashcard | null>(
-    lastGeneratedFlashcard || null
-  );
+  const [flashcard, setFlashcards] = React.useState<Flashcard | null>(null);
+
+  React.useEffect(() => {
+    const LastGen_FCString = localStorage.getItem("lastGeneratedFlashcard");
+    if (LastGen_FCString) {
+      try {
+        const lastGeneratedFlashcard = JSON.parse(
+          LastGen_FCString
+        ) as Flashcard;
+        setFlashcards(lastGeneratedFlashcard);
+      } catch (error) {
+        console.error("Error parsing flashcard from localStorage:", error);
+      }
+    }
+  }, []);
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
   // user email for user id

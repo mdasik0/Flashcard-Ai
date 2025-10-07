@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar/Navbar";
 import { geistMono, geistSans } from "@/lib/fonts";
 import { AuthProvider } from "./providers";
 import AuthButton from "@/components/UtilityComp/AuthButton";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Flashcard-Ai",
@@ -20,6 +21,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Toaster toastOptions={{style: {
+      border: '3px solid #2b2b2b',
+      color: 'white',
+      background: '#0E0E0E'
+    }}} />
         <AuthProvider>
           <div className="flex justify-center  sm:justify-start items-center min-h-screen">
             <Navbar />

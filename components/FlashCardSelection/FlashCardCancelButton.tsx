@@ -1,12 +1,16 @@
 import { roboto } from '@/lib/fonts'
 import { Flashcard } from '@/types/flashcard';
 import React from 'react'
+import toast from 'react-hot-toast';
 import { MdOutlineCancel } from 'react-icons/md'
 
 export default function FlashCardCancelButton({setFlashcards}: {setFlashcards:React.Dispatch<React.SetStateAction<Flashcard | null>>}) {
    const handleCancelSave = () => {
     setFlashcards(null);
     localStorage.removeItem("lastGeneratedFlashcard");
+    toast.error('Save FlashCard Canceled!',{
+      className:'bg-red-800'
+    })
   };
 
   return (

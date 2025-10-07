@@ -1,7 +1,8 @@
 "use client";
-import { GenerateInputProps } from "@/types/flashcard";
+import { fetchedFlashcard, Flashcard, GenerateInputProps } from "@/types/flashcard";
 import { useSession } from "next-auth/react";
 import React from "react";
+import toast from "react-hot-toast";
 
 export default function GenerateInput({
   setFlashcards,
@@ -17,48 +18,63 @@ export default function GenerateInput({
   //check user session
   const {status} = useSession();
 
-  const generateCards = async () => {
-    // checks for empty prompt
-    if (!prompt.trim()) {
-      setError("Please enter a prompt");
-      return;
-    }
-    // check for unauthenticated user / user not logged in
-    if(status === "unauthenticated"){
-      setError("Please Login First");
-      return;
-    }
-    // reset states
-    setIsLoading(true);
-    setError(null);
-    setFlashcards(null);
-    // call api to generate flashcards
-    try {
-      const res = await fetch("http://localhost:5000/api/ai/generate-flashcard", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          question : prompt,
-        }),
-      });
-      // turn the response into json
-      const data = await res.json();
-      // check if response is not ok
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to generate flashcards");
+const generateCards = async () => {
+  // checks for empty prompt
+  if (!prompt.trim()) {
+    setError("Please enter a prompt");
+    return;
+  }
+  // check for unauthenticated user / user not logged in
+  if (status === "unauthenticated") {
+    setError("Please Login First");
+    return;
+  }
+  // reset states
+  setIsLoading(true);
+  setError(null);
+  setFlashcards(null);
+
+  try {
+    // Create the fetch promise (don't await yet)
+    const fetchPromise = fetch("http://localhost:5000/api/ai/generate-flashcard", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        question: prompt,
+      }),
+    }).then(async (response) => {
+      // Parse JSON first
+      const data = await response.json();
+      
+      // Check if response is not ok
+      console.log(data)
+      if (data?.response?.answer === ' ') {
+        return toast.error(`Ai has failed to answer your Question.
+          Please try again.`)
       }
-      // set flashcards state with the generated flashcards
-      console.log(data);
-      setFlashcards(data?.response);
-      localStorage.setItem('lastGeneratedFlashcard', JSON.stringify(data?.response));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      
+      return data;
+    });
+
+    // Pass the promise to toast.promise and await the result
+    const data = await toast.promise(fetchPromise, {
+      loading: 'Generating flashcards...',
+      success: 'Flashcards generated successfully!',
+      error: (err) => err.message || 'Error generating flashcards',
+    });
+
+    // set flashcards state with the generated flashcards
+    console.log(data);
+    setFlashcards(data?.response);
+    localStorage.setItem('lastGeneratedFlashcard', JSON.stringify(data?.response));
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "An error occurred");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   // handle enter to submit instead of generate button
   const handleKeyDown = (e: React.KeyboardEvent) => {
