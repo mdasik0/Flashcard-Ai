@@ -1,5 +1,5 @@
 "use client";
-import { fetchedFlashcard, Flashcard, GenerateInputProps } from "@/types/flashcard";
+import { GenerateInputProps } from "@/types/flashcard";
 import { useSession } from "next-auth/react";
 import React from "react";
 import toast from "react-hot-toast";
