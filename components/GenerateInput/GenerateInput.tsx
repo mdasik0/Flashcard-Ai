@@ -78,7 +78,7 @@ const generateCards = async () => {
 
   // handle enter to submit instead of generate button
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && e.ctrlKey) {
+    if (e.key === "Enter") {
       e.preventDefault();
       generateCards();
     }
