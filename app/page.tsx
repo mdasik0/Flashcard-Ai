@@ -80,7 +80,10 @@ export default function Home() {
                   </h2>
                   <div className="flex flex-col">
                     {/* {flashcards} */}
+                    <div className="w-[350px] sm:h-[500px] h-[420px]">
+
                     <FlipCard cardSelection={true} card={flashcard} i={0} />
+                    </div>
                     <CardSelectionButton
                       saveCardLoading={loading}
                       handleSaveFlashCard={handleSaveFlashCard}

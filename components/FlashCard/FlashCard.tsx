@@ -3,6 +3,9 @@ import { useState } from "react";
 import "./flashcard.css";
 import { roboto } from "@/lib/fonts";
 import { Flashcard } from "@/types/flashcard";
+import Image from "next/image";
+import QueSvg from "@/public/Svg/Question_icon.svg";
+import AnsSvg from "@/public/Svg/Answer_icon.svg";
 
 export default function FlipCard({
   card,
@@ -24,17 +27,23 @@ export default function FlipCard({
     console.log(`Delete card at index ${index}`);
   };
   return (
-    <div className="flip-card-container" onClick={() => setFlip(!flip)}>
+    <div
+      className="flip-card-container w-full h-full"
+      onClick={() => setFlip(!flip)}
+    >
       <div
-        className={`flip-card w-[350px] sm:h-[500px] h-[420px] ${
-          flip ? "flip-card-anim" : ""
-        }`}
+        className={`flip-card w-full h-full ${flip ? "flip-card-anim" : ""}`}
       >
         {/* Front face */}
         <div
           className={`flip-card-front border-[10px] border-[#181818] bg-[#0e0e0e] flex flex-col justify-between leading-10 ${roboto.variable}`}
         >
           <div className="p-4 pt-3 relative h-full flex flex-col">
+            <Image
+              className="w-full h-full object-contain absolute top-0 left-0 -z-[100] opacity-25"
+              src={QueSvg}
+              alt="Question_icon"
+            />
             {/* question */}
             <div className="flex-1 flex items-start justify-center">
               <p
@@ -81,17 +90,21 @@ export default function FlipCard({
         </div>
 
         {/* Back face */}
-        <div className="flip-card-back bg-[#181818] p-6">
-          <h3 className={`text-2xl ${roboto.variable}`}>Answer :</h3>
-          <br />
-          <span
-            style={{
-              whiteSpace: "normal",
-            }}
-          >
-            {card?.answer}
-          </span>
-        </div>
+        <div className="flip-card-back bg-[#181818] p-3 flex flex-col">
+  <h3 className={`font-medium bg-[#0e0e0e] w-fit px-4 py-1.5 rounded-full mb-3 ${roboto.variable}`}>
+    Answer 
+  </h3>
+  <div className="relative rounded-xl p-3 flex-1 overflow-auto before:content-[''] before:absolute before:inset-0 before:bg-[#0e0e0e] before:rounded-xl before:-z-10">
+    <Image
+      className="w-full h-full object-contain absolute top-0 left-0 opacity-20 z-0 "
+      src={AnsSvg}
+      alt="Question_icon"
+    />
+    <span className="relative z-10" style={{ whiteSpace: "normal" }}>
+      {card?.answer}
+    </span>
+  </div>
+</div>
       </div>
     </div>
   );
