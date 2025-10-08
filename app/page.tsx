@@ -81,8 +81,7 @@ export default function Home() {
                   <div className="flex flex-col">
                     {/* {flashcards} */}
                     <div className="w-[350px] sm:h-[500px] h-[420px]">
-
-                    <FlipCard cardSelection={true} card={flashcard} i={0} />
+                      <FlipCard cardSelection={true} card={flashcard} i={0} />
                     </div>
                     <CardSelectionButton
                       saveCardLoading={loading}

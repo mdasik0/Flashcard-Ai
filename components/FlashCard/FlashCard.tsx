@@ -91,20 +91,22 @@ export default function FlipCard({
 
         {/* Back face */}
         <div className="flip-card-back bg-[#181818] p-3 flex flex-col">
-  <h3 className={`font-medium bg-[#0e0e0e] w-fit px-4 py-1.5 rounded-full mb-3 ${roboto.variable}`}>
-    Answer 
-  </h3>
-  <div className="relative rounded-xl p-3 flex-1 overflow-auto before:content-[''] before:absolute before:inset-0 before:bg-[#0e0e0e] before:rounded-xl before:-z-10">
-    <Image
-      className="w-full h-full object-contain absolute top-0 left-0 opacity-20 z-0 "
-      src={AnsSvg}
-      alt="Question_icon"
-    />
-    <span className="relative z-10" style={{ whiteSpace: "normal" }}>
-      {card?.answer}
-    </span>
-  </div>
-</div>
+          <h3
+            className={`font-medium bg-[#0e0e0e] w-fit px-4 py-1.5 rounded-full mb-3 ${roboto.variable}`}
+          >
+            Answer
+          </h3>
+          <div className="relative rounded-xl p-3 flex-1 overflow-auto before:content-[''] before:absolute before:inset-0 before:bg-[#0e0e0e] before:rounded-xl before:-z-10">
+            <Image
+              className="w-full h-full object-contain absolute top-0 left-0 opacity-20 z-0 "
+              src={AnsSvg}
+              alt="Question_icon"
+            />
+            <span className="relative z-10" style={{ whiteSpace: "normal" }}>
+              {card?.answer}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );

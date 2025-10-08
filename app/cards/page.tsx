@@ -11,7 +11,7 @@ export default function cardsPage() {
             <div className="absolute w-[330px] h-[480px] bg-gray-600 rounded-xl rotate-6"> </div>
             <div className="absolute w-[330px] h-[480px] bg-gray-500  rounded-xl -rotate-3 -translate-x-1.5 translate-y-2"> </div>
             <div className="absolute w-[330px] h-[480px] bg-gray-400 rounded-xl rotate-3"> </div>
-            <div className="w-[330px] h-[480px] rounded-xl absolute bg-white"><FlashCard card={{question: 'what is this?', answer: 'this is kachamorcih'}} i={1} cardSelection={false}  /></div>
+            <div className="w-[330px] h-[480px] rounded-xl absolute"><FlashCard card={{question: 'what is this?', answer: 'this is kachamorcih'}} i={1} cardSelection={false}  /></div>
           </div>
         </div>
       </div>
