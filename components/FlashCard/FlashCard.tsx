@@ -2,7 +2,7 @@
 import { useState } from "react";
 import "./flashcard.css";
 import { roboto } from "@/lib/fonts";
-import { Flashcard } from "@/types/flashcard";
+import { fetchedFlashcard, Flashcard } from "@/types/flashcard";
 import Image from "next/image";
 import QueSvg from "@/public/Svg/Question_icon.svg";
 import AnsSvg from "@/public/Svg/Answer_icon.svg";
@@ -11,13 +11,16 @@ export default function FlipCard({
   card,
   i,
   cardSelection,
+  fetchedCard,
+  deckName
 }: {
-  card: Flashcard;
+  card: Flashcard | null;
   i: number;
   cardSelection?: boolean;
+  deckName?:string;
+  fetchedCard: fetchedFlashcard
 }) {
   const [flip, setFlip] = useState(false);
-  const deckName = "Js question";
   const handleCardEdit = (index: number) => {
     // Handle card edit logic here
     console.log(`Edit card at index ${index}`);
@@ -52,7 +55,7 @@ export default function FlipCard({
                   whiteSpace: "normal",
                 }}
               >
-                {card?.question}
+                {fetchedCard ? fetchedCard?.question : card?.question}
               </p>
             </div>
 
@@ -67,7 +70,7 @@ export default function FlipCard({
           >
             {/* deck name */}
             <span className="text-xs bg-[#0e0e0e] px-3 py-2 rounded-full bg">
-              {deckName}
+              {fetchedCard? fetchedCard?.deckName : deckName ? deckName : 'Not selected'}
             </span>
             {/* edit and delete*/}
             <div>
@@ -103,7 +106,7 @@ export default function FlipCard({
               alt="Question_icon"
             />
             <span className="relative z-10" style={{ whiteSpace: "normal" }}>
-              {card?.answer}
+              {fetchedCard ? fetchedCard?.answer : card?.answer}
             </span>
           </div>
         </div>
