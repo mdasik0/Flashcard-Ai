@@ -5,9 +5,7 @@ import FlashCard from "@/components/FlashCard/FlashCard";
 export default function CardsCarousel() {
   const fakes = [
     {
-      _id: {
-        $oid: "68e0f1bad8676a85b3665cfd",
-      },
+      _id:"68e0f1bad8676a85b3665cfd",
       question: "what is bind in js?",
       answer:
         'In JavaScript, "bind" is a method that creates a new function with a specified "this" value.',
@@ -23,9 +21,7 @@ export default function CardsCarousel() {
       __v: 0,
     },
     {
-      _id: {
-        $oid: "68e138d3d8676a85b3665d08",
-      },
+      _id: "68e138d3d8676a85b3665d08",
       question: "what is an event loop?",
       answer:
         "An event loop is a programming construct that waits for and dispatches events or messages in a program.",
@@ -41,9 +37,7 @@ export default function CardsCarousel() {
       __v: 0,
     },
     {
-      _id: {
-        $oid: "68e14517d8676a85b3665d0e",
-      },
+      _id: "68e14517d8676a85b3665d0e",
       question: "what is a State in React?",
       answer:
         "A state in React is a data structure that holds information about a component's current state.",
@@ -59,9 +53,7 @@ export default function CardsCarousel() {
       __v: 0,
     },
     {
-      _id: {
-        $oid: "68e25924ae6e7c6973ae7016",
-      },
+      _id: "68e25924ae6e7c6973ae7016",
       question: "what is ES6?",
       answer:
         "ES6 is the sixth major version of JavaScript, introducing features like classes, arrow functions, and modules.",
