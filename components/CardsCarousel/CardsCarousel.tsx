@@ -1,24 +1,19 @@
 "use client";
 import React, { useState } from "react";
 import FlashCard from "@/components/FlashCard/FlashCard";
-
+import './cardCarousel.css'
 export default function CardsCarousel() {
   const fakes = [
     {
-      _id:"68e0f1bad8676a85b3665cfd",
+      _id: "68e0f1bad8676a85b3665cfd",
       question: "what is bind in js?",
       answer:
         'In JavaScript, "bind" is a method that creates a new function with a specified "this" value.',
       deckId: "68e0bb36d8676a85b3665ceb",
       deckName: "asik gadha",
       userId: "101343459899203208475",
-      createdAt: {
-        $date: "2025-10-04T10:06:50.463Z",
-      },
-      updatedAt: {
-        $date: "2025-10-04T10:06:50.463Z",
-      },
-      __v: 0,
+      createdAt: "2025-10-04T10:06:50.463Z",
+      updatedAt: "2025-10-04T10:06:50.463Z",
     },
     {
       _id: "68e138d3d8676a85b3665d08",
@@ -28,13 +23,8 @@ export default function CardsCarousel() {
       deckId: "68e0bb36d8676a85b3665ceb",
       deckName: "asik gadha",
       userId: "101343459899203208475",
-      createdAt: {
-        $date: "2025-10-04T15:10:11.462Z",
-      },
-      updatedAt: {
-        $date: "2025-10-04T15:10:11.462Z",
-      },
-      __v: 0,
+      createdAt: "2025-10-04T15:10:11.462Z",
+      updatedAt: "2025-10-04T15:10:11.462Z",
     },
     {
       _id: "68e14517d8676a85b3665d0e",
@@ -44,13 +34,8 @@ export default function CardsCarousel() {
       deckId: "68e0bb36d8676a85b3665ceb",
       deckName: "asik gadha",
       userId: "101343459899203208475",
-      createdAt: {
-        $date: "2025-10-04T16:02:31.571Z",
-      },
-      updatedAt: {
-        $date: "2025-10-04T16:02:31.571Z",
-      },
-      __v: 0,
+      createdAt: "2025-10-04T16:02:31.571Z",
+      updatedAt: "2025-10-04T16:02:31.571Z",
     },
     {
       _id: "68e25924ae6e7c6973ae7016",
@@ -60,30 +45,46 @@ export default function CardsCarousel() {
       deckId: "68e0bb36d8676a85b3665ceb",
       deckName: "asik gadha",
       userId: "101343459899203208475",
-      createdAt: {
-        $date: "2025-10-05T11:40:20.063Z",
-      },
-      updatedAt: {
-        $date: "2025-10-05T11:40:20.063Z",
-      },
-      __v: 0,
+      createdAt: "2025-10-05T11:40:20.063Z",
+      updatedAt: "2025-10-05T11:40:20.063Z",
     },
   ];
   const [flashcards, setFlashcards] = useState(fakes);
   const [caruselIndex, setCaruselIndex] = useState(0);
+  const goNext = () => {
+    const nextDemoElement = document.querySelector('.nextDemoElement')?.classList;
+    if(nextDemoElement && nextDemoElement.contains('flying-card-next')){
+      return nextDemoElement?.remove('flying-card-next')
+    } else {
+      nextDemoElement?.add('flying-card-next')
+    }
+    setTimeout(() => {
+      setCaruselIndex((prev) => (prev >= fakes.length - 1 ? 0 : prev + 1));
+    }, 500);
+    setTimeout(() => {
+      nextDemoElement?.add('transition-opacity')
+    }, 600);
+    setTimeout(() => {
+      nextDemoElement?.remove('flying-card-next')
+      nextDemoElement?.remove('transition-opacity')
+
+    }, 800);
+  };
+  const goPrevious = () => {
+    setTimeout(() => {
+      setCaruselIndex((prev) => (prev <= 0 ? fakes.length - 1 : prev - 1));
+    }, 500);
+  };
 
   return (
     <div className="h-screen w-full sm:w-[calc(100vw-90px)] flex items-center justify-center">
       <div className="carousel-container h-screen w-[500px] relative">
         <div className="carousel-cards-ui relative flex items-center justify-center h-full">
           <div className="absolute w-[330px] h-[480px] bg-[#181818] rounded-xl rotate-6">
-            {" "}
           </div>
           <div className="absolute w-[330px] h-[480px] bg-[#181818]  rounded-xl -rotate-3 -translate-x-1.5 translate-y-2">
-            {" "}
           </div>
           <div className="absolute w-[330px] h-[480px] bg-[#181818] rounded-xl rotate-3">
-            {" "}
           </div>
           <div className="w-[330px] h-[480px] rounded-xl absolute">
             <FlashCard
@@ -93,22 +94,11 @@ export default function CardsCarousel() {
               fetchedCard={flashcards[caruselIndex]}
             />
           </div>
+          <div className="nextDemoElement ddadfa"></div>
         </div>
         <div className="flex items-center justify-between w-full absolute top-1/2 ">
-          <button
-            onClick={() =>
-              setCaruselIndex((prev) => (prev <= 0 ? fakes.length - 1 : prev - 1))
-            }
-          >
-            prev
-          </button>
-          <button
-            onClick={() =>
-              setCaruselIndex((prev) => (prev >= fakes.length - 1 ? 0 : prev + 1))
-            }
-          >
-            next
-          </button>
+          <button onClick={goPrevious}>prev</button>
+          <button onClick={goNext}>next</button>
         </div>
       </div>
     </div>

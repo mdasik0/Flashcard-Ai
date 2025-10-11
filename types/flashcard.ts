@@ -10,8 +10,8 @@ export type Flashcard = {
   deckId: string;
   deckName: string;
   userId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type PostFleshCardApiRes = {
