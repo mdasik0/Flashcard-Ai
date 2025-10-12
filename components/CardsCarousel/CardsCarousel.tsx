@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FlashCard from "@/components/FlashCard/FlashCard";
 import "./cardCarousel.css";
 export default function CardsCarousel() {
@@ -89,6 +89,13 @@ export default function CardsCarousel() {
       prevDemoElement?.remove("transition-opacity");
     }, 800);
   };
+
+  useEffect(()=>{
+
+  },[])
+
+  //TODO: test create new deck. check if the new deck has active status or not.
+  //TODO: collect deckId from localstorage and fetch flashcards with that ID.
 
   return (
     <div className="h-screen w-full sm:w-[calc(100vw-90px)] flex items-center justify-center">

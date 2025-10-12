@@ -40,6 +40,11 @@ export default function CreateNewDeckModal({
         body: JSON.stringify(deckData),
       });
       const result: PostDeckApiRes<Deck> = await response.json();
+      if(result?.data?.active) {
+        // if active store deckId
+        localStorage.setItem('activeDeck', JSON.stringify(result?.data?._id))
+      }
+      // else do the thing
       setLoading({ ...loading, createDeck: false });
       setInput("");
       setDecks([...decks, result?.data]);

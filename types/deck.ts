@@ -3,6 +3,7 @@ export type Deck = {
   deckName: string;
   creatorId: string;
   deckImage?: string;
+  active: boolean;
   privacy: boolean;
   updatedAt: Date;
 };

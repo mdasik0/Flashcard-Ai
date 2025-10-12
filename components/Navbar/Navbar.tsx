@@ -187,8 +187,6 @@ export function NavForMobileLayout() {
   );
 }
 
-//TODO: add NavForMobileLayout here later
-
 export function DeskTopAndTabNav() {
   return (
     <nav
