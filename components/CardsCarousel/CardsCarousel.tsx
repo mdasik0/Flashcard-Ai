@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import FlashCard from "@/components/FlashCard/FlashCard";
-import './cardCarousel.css'
+import "./cardCarousel.css";
 export default function CardsCarousel() {
   const fakes = [
     {
@@ -52,41 +52,52 @@ export default function CardsCarousel() {
   const [flashcards, setFlashcards] = useState(fakes);
   const [caruselIndex, setCaruselIndex] = useState(0);
   const goNext = () => {
-    const nextDemoElement = document.querySelector('.nextDemoElement')?.classList;
-    if(nextDemoElement && nextDemoElement.contains('flying-card-next')){
-      return nextDemoElement?.remove('flying-card-next')
+    const nextDemoElement =
+      document.querySelector(".nextDemoElement")?.classList;
+    if (nextDemoElement && nextDemoElement.contains("flying-card-next")) {
+      return nextDemoElement?.remove("flying-card-next");
     } else {
-      nextDemoElement?.add('flying-card-next')
+      nextDemoElement?.add("flying-card-next");
     }
     setTimeout(() => {
       setCaruselIndex((prev) => (prev >= fakes.length - 1 ? 0 : prev + 1));
     }, 500);
     setTimeout(() => {
-      nextDemoElement?.add('transition-opacity')
+      nextDemoElement?.add("transition-opacity");
     }, 600);
     setTimeout(() => {
-      nextDemoElement?.remove('flying-card-next')
-      nextDemoElement?.remove('transition-opacity')
-
+      nextDemoElement?.remove("flying-card-next");
+      nextDemoElement?.remove("transition-opacity");
     }, 800);
   };
   const goPrevious = () => {
+    const prevDemoElement =
+      document.querySelector(".prevDemoElement")?.classList;
+    if (prevDemoElement && prevDemoElement.contains("flying-card-previous")) {
+      return prevDemoElement?.remove("flying-card-previous");
+    } else {
+      prevDemoElement?.add("flying-card-previous");
+    }
     setTimeout(() => {
       setCaruselIndex((prev) => (prev <= 0 ? fakes.length - 1 : prev - 1));
     }, 500);
+    setTimeout(() => {
+      prevDemoElement?.add("transition-opacity");
+    }, 600);
+    setTimeout(() => {
+      prevDemoElement?.remove("flying-card-previous");
+      prevDemoElement?.remove("transition-opacity");
+    }, 800);
   };
 
   return (
     <div className="h-screen w-full sm:w-[calc(100vw-90px)] flex items-center justify-center">
       <div className="carousel-container h-screen w-[500px] relative">
         <div className="carousel-cards-ui relative flex items-center justify-center h-full">
-          <div className="absolute w-[330px] h-[480px] bg-[#181818] rounded-xl rotate-6">
-          </div>
-          <div className="absolute w-[330px] h-[480px] bg-[#181818]  rounded-xl -rotate-3 -translate-x-1.5 translate-y-2">
-          </div>
-          <div className="absolute w-[330px] h-[480px] bg-[#181818] rounded-xl rotate-3">
-          </div>
-          <div className="w-[330px] h-[480px] rounded-xl absolute">
+          <div className="absolute z-0 w-[330px] h-[480px] bg-[#1f1f1f] rounded-xl rotate-6"></div>
+          <div className="absolute z-10 w-[330px] h-[480px] bg-[#1f1f1f]  rounded-xl -rotate-3 -translate-x-1.5 translate-y-2"></div>
+          <div className="absolute w-[330px] h-[480px] rotate-3 bg-[#181818] rounded-xl prevDemoElement"></div>
+          <div className="w-[330px] h-[480px] rounded-xl absolute z-30">
             <FlashCard
               card={null}
               i={caruselIndex}
@@ -94,7 +105,7 @@ export default function CardsCarousel() {
               fetchedCard={flashcards[caruselIndex]}
             />
           </div>
-          <div className="nextDemoElement ddadfa"></div>
+          <div className="nextDemoElement"></div>
         </div>
         <div className="flex items-center justify-between w-full absolute top-1/2 ">
           <button onClick={goPrevious}>prev</button>
