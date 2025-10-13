@@ -18,7 +18,7 @@ export default function FlipCard({
   i: number;
   cardSelection?: boolean;
   deckName?:string;
-  fetchedCard: fetchedFlashcard
+  fetchedCard?: fetchedFlashcard
 }) {
   const [flip, setFlip] = useState(false);
   const handleCardEdit = (index: number) => {

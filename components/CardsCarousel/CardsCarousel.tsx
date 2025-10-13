@@ -50,7 +50,7 @@ export default function CardsCarousel() {
     },
   ];
   const [flashcards, setFlashcards] = useState(fakes);
-  const [caruselIndex, setCaruselIndex] = useState(0);
+  const [carouselIndex, setCarouselIndex] = useState(0);
   const goNext = () => {
     const nextDemoElement =
       document.querySelector(".nextDemoElement")?.classList;
@@ -60,7 +60,7 @@ export default function CardsCarousel() {
       nextDemoElement?.add("flying-card-next");
     }
     setTimeout(() => {
-      setCaruselIndex((prev) => (prev >= fakes.length - 1 ? 0 : prev + 1));
+      setCarouselIndex((prev) => (prev >= fakes.length - 1 ? 0 : prev + 1));
     }, 500);
     setTimeout(() => {
       nextDemoElement?.add("transition-opacity");
@@ -79,7 +79,7 @@ export default function CardsCarousel() {
       prevDemoElement?.add("flying-card-previous");
     }
     setTimeout(() => {
-      setCaruselIndex((prev) => (prev <= 0 ? fakes.length - 1 : prev - 1));
+      setCarouselIndex((prev) => (prev <= 0 ? fakes.length - 1 : prev - 1));
     }, 500);
     setTimeout(() => {
       prevDemoElement?.add("transition-opacity");
@@ -110,8 +110,7 @@ export default function CardsCarousel() {
     fetchFlashcardData()
   },[activeDeckId])
 
-  //TODO: collect deckId from localstorage and fetch flashcards with that ID.
-  //TODO: FIX CARUSEL SPELLING  
+  //TODO: FIX Carousel SPELLING  
   return (
     <div className="h-screen w-full sm:w-[calc(100vw-90px)] flex items-center justify-center">
       <div className="carousel-container h-screen w-[500px] relative">
@@ -122,9 +121,9 @@ export default function CardsCarousel() {
           <div className="w-[330px] h-[480px] rounded-xl absolute z-30">
             <FlashCard
               card={null}
-              i={caruselIndex}
+              i={carouselIndex}
               cardSelection={false}
-              fetchedCard={flashcards[caruselIndex]}
+              fetchedCard={flashcards[carouselIndex]}
             />
           </div>
           <div className="nextDemoElement"></div>
