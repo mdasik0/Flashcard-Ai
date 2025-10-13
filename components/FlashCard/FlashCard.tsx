@@ -29,6 +29,9 @@ export default function FlipCard({
     // Handle card delete logic here
     console.log(`Delete card at index ${index}`);
   };
+
+  //TODO: Flashcard delete option added to the flashcard component
+  //TODO: edit option added to the flashcard component
   return (
     <div
       className="flip-card-container w-full h-full"

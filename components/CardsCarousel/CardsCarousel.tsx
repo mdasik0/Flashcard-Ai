@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import FlashCard from "@/components/FlashCard/FlashCard";
 import "./cardCarousel.css";
+import { MdNavigateNext } from "react-icons/md";
+import { GrFormPrevious } from "react-icons/gr";
 export default function CardsCarousel() {
   // const fakes = [
   //   {
@@ -131,8 +133,8 @@ export default function CardsCarousel() {
         </div>
         {
           flashcards.length <= 1 ? "" : <div className="flex items-center justify-between w-full absolute top-1/2 ">
-          <button onClick={goPrevious}>prev</button>
-          <button onClick={goNext}>next</button>
+          <button title="previous" className="bg-[#0E0E0E] text-xl p-3 rounded-full hover:bg-[#181818] duration-300 cursor-pointer" onClick={goPrevious}><GrFormPrevious /></button>
+          <button title="next" className="bg-[#0E0E0E] text-xl p-3 rounded-full hover:bg-[#181818] duration-300 cursor-pointer" onClick={goNext}><MdNavigateNext /></button>
         </div>
         }
       </div>
