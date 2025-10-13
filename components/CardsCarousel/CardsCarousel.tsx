@@ -94,9 +94,8 @@ export default function CardsCarousel() {
 
   },[])
 
-  //TODO: test create new deck. check if the new deck has active status or not.
   //TODO: collect deckId from localstorage and fetch flashcards with that ID.
-
+  //TODO: FIX CARUSEL SPELLING  
   return (
     <div className="h-screen w-full sm:w-[calc(100vw-90px)] flex items-center justify-center">
       <div className="carousel-container h-screen w-[500px] relative">

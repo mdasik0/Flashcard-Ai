@@ -1,6 +1,7 @@
 import { roboto } from "@/lib/fonts";
 import { Deck, PostDeckApiRes } from "@/types/deck";
 import React from "react";
+import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 
@@ -45,6 +46,9 @@ export default function CreateNewDeckModal({
         localStorage.setItem('activeDeck', JSON.stringify(result?.data?._id))
       }
       // else do the thing
+      if(result?.data) {
+        toast.success('New Deck Created')
+      }
       setLoading({ ...loading, createDeck: false });
       setInput("");
       setDecks([...decks, result?.data]);
