@@ -6,6 +6,7 @@ import GenerateInput from "@/components/GenerateInput/GenerateInput";
 import { Flashcard, PostFleshCardApiRes } from "@/types/flashcard";
 import { useSession } from "next-auth/react";
 import React from "react";
+import toast from "react-hot-toast";
 
 export default function Home() {
   const [flashcard, setFlashcards] = React.useState<Flashcard | null>(null);
@@ -51,7 +52,7 @@ export default function Home() {
       const confirmation: PostFleshCardApiRes = await response.json();
       setLoading(false);
       if (confirmation.success) {
-        alert(confirmation.message);
+        toast.success(confirmation.message);
         localStorage.removeItem("lastGeneratedFlashcard");
         setFlashcards(null);
       }

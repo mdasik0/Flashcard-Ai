@@ -90,9 +90,25 @@ export default function CardsCarousel() {
     }, 800);
   };
 
-  useEffect(()=>{
+  const activeDeckId = JSON.parse(localStorage.getItem('activeDeck') as string)
 
-  },[])
+  useEffect(()=>{
+    const fetchFlashcardData = async() =>{
+      try {
+        if(!activeDeckId) {
+          return console.log('there is no deck id to fetch the data with')
+        }
+        const response = await fetch(`http://localhost:5000/api/flashcards/${activeDeckId}`)
+        const result = await response.json()
+        
+        setFlashcards(result?.data)
+      } catch (error) {
+        console.log('there was an error fetching cards data',error)
+      }
+    }
+
+    fetchFlashcardData()
+  },[activeDeckId])
 
   //TODO: collect deckId from localstorage and fetch flashcards with that ID.
   //TODO: FIX CARUSEL SPELLING  
