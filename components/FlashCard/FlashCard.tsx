@@ -6,11 +6,11 @@ import { fetchedFlashcard, Flashcard } from "@/types/flashcard";
 import Image from "next/image";
 import QueSvg from "@/public/Svg/Question_icon.svg";
 import AnsSvg from "@/public/Svg/Answer_icon.svg";
+import toast from "react-hot-toast";
 
 export default function FlipCard({
   card,
   i,
-  cardSelection,
   fetchedCard,
   deckName
 }: {
@@ -18,16 +18,28 @@ export default function FlipCard({
   i: number;
   cardSelection?: boolean;
   deckName?:string;
-  fetchedCard?: fetchedFlashcard
+  fetchedCard?: fetchedFlashcard | null
 }) {
   const [flip, setFlip] = useState(false);
-  const handleCardEdit = (index: number) => {
+  const handleCardEdit = (_id: string) => {
     // Handle card edit logic here
-    console.log(`Edit card at index ${index}`);
+    console.log(`Edit card at index ${_id}`);
   };
-  const handleCardDelete = (index: number) => {
+  const handleCardDelete = async (_id: string) => {
     // Handle card delete logic here
-    console.log(`Delete card at index ${index}`);
+    console.log(`Delete card at index ${_id}`);
+    try {
+      const response = await fetch(`http://localhost:5000/api/flashcard/${_id}`,{
+        method: 'DELETE',
+      })
+      const result = await response.json();
+      console.log(result) 
+      if(result?.success){
+        toast.success(result.message)
+      }
+    } catch (error) {
+      console.log('There was an error deleting the flashcard', error)
+    }
   };
 
   //TODO: Flashcard delete option added to the flashcard component
@@ -78,15 +90,15 @@ export default function FlipCard({
             {/* edit and delete*/}
             <div>
               <button
-                onClick={() => handleCardEdit(i)}
-                disabled={cardSelection}
+                onClick={() => handleCardEdit(fetchedCard?._id as string)}
+                disabled={!fetchedCard}
                 className="text-xs disabled:cursor-not-allowed disabled:bg-[#1d1d1d] disabled:text-gray-400 bg-[#0e0e0e]  px-3 py-2 rounded-full ms-2 cursor-pointer"
               >
                 Edit
               </button>
               <button
-                onClick={() => handleCardDelete(i)}
-                disabled={cardSelection}
+                onClick={() => handleCardDelete(fetchedCard?._id as string)}
+                disabled={!fetchedCard}
                 className="text-xs disabled:cursor-not-allowed disabled:bg-[#1d1d1d] disabled:text-gray-400 bg-[#c21313] px-3 py-2 rounded-full ms-2 cursor-pointer"
               >
                 Delete

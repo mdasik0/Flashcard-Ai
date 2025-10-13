@@ -1,9 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import FlashCard from "@/components/FlashCard/FlashCard";
 import "./cardCarousel.css";
 import { MdNavigateNext } from "react-icons/md";
 import { GrFormPrevious } from "react-icons/gr";
+import FlipCard from "../FlashCard/FlashCard";
+import Link from "next/link";
+import { RiRobot2Line } from "react-icons/ri";
 export default function CardsCarousel() {
   // const fakes = [
   //   {
@@ -62,7 +64,7 @@ export default function CardsCarousel() {
       nextDemoElement?.add("flying-card-next");
     }
     setTimeout(() => {
-      setCarouselIndex((prev) => (prev >= flashcards.length - 1 ? 0 : prev + 1));
+      setCarouselIndex((prev) => (prev >= flashcards?.length - 1 ? 0 : prev + 1));
     }, 500);
     setTimeout(() => {
       nextDemoElement?.add("transition-opacity");
@@ -81,7 +83,7 @@ export default function CardsCarousel() {
       prevDemoElement?.add("flying-card-previous");
     }
     setTimeout(() => {
-      setCarouselIndex((prev) => (prev <= 0 ? flashcards.length - 1 : prev - 1));
+      setCarouselIndex((prev) => (prev <= 0 ? flashcards?.length - 1 : prev - 1));
     }, 500);
     setTimeout(() => {
       prevDemoElement?.add("transition-opacity");
@@ -103,7 +105,7 @@ export default function CardsCarousel() {
         const response = await fetch(`http://localhost:5000/api/flashcards/${activeDeckId}`)
         const result = await response.json()
         
-        setFlashcards(result?.data)
+        setFlashcards(result?.data ? result?.data : [])
       } catch (error) {
         console.log('there was an error fetching cards data',error)
       }
@@ -114,30 +116,33 @@ export default function CardsCarousel() {
 
   return (
     <div className="h-screen w-full sm:w-[calc(100vw-90px)] flex items-center justify-center">
-      <div className="carousel-container h-screen w-[500px] relative">
+      {
+        flashcards?.length <= 0 ? <div>
+          <h1 className="text-4xl mb-2">No Flashcard available</h1>
+          <p className="text-gray-600 text-center duration-300 flex items-center gap-2"><span className="flex items-center gap-2 group"><Link className="hover:underline hover:text-blue-500 duration-300 cursor-pointer" href={'/'}>Generate Flashcard</Link> with <RiRobot2Line className="group-hover:text-blue-500" /></span> or <span className="hover:text-green-500 border-dashed hover:border-b hover:border-green-500 duration-300 cursor-pointer">Add Manually</span></p>
+        </div> : <div className="carousel-container h-screen w-[500px] relative">
         <div className="carousel-cards-ui relative flex items-center justify-center h-full">
           <div className="absolute z-0 w-[330px] h-[480px] bg-[#1f1f1f] rounded-xl rotate-6"></div>
           <div className="absolute z-10 w-[330px] h-[480px] bg-[#1f1f1f]  rounded-xl -rotate-3 -translate-x-1.5 translate-y-2"></div>
           <div className="absolute w-[330px] h-[480px] rotate-3 bg-[#181818] rounded-xl prevDemoElement"></div>
           <div className="w-[330px] h-[480px] rounded-xl absolute z-30">
-            {
-              flashcards.length <= 0 ? <div>No Flashcard available</div> : <FlashCard
+             <FlipCard
               card={null}
               i={carouselIndex}
               cardSelection={false}
-              fetchedCard={flashcards[carouselIndex]}
+              fetchedCard={flashcards?.length == 0 ? null : flashcards[carouselIndex]}
             />
-            }
           </div>
           <div className="nextDemoElement"></div>
         </div>
         {
-          flashcards.length <= 1 ? "" : <div className="flex items-center justify-between w-full absolute top-1/2 ">
+          flashcards?.length <= 1 ? "" : <div className="flex items-center justify-between w-full absolute top-1/2 ">
           <button title="previous" className="bg-[#0E0E0E] text-xl p-3 rounded-full hover:bg-[#181818] duration-300 cursor-pointer" onClick={goPrevious}><GrFormPrevious /></button>
           <button title="next" className="bg-[#0E0E0E] text-xl p-3 rounded-full hover:bg-[#181818] duration-300 cursor-pointer" onClick={goNext}><MdNavigateNext /></button>
         </div>
         }
       </div>
+      }
     </div>
   );
 }
