@@ -12,33 +12,35 @@ export default function FlipCard({
   card,
   i,
   fetchedCard,
-  deckName
+  deckName,
+  setEditModal,
 }: {
   card: Flashcard | null;
   i: number;
   cardSelection?: boolean;
-  deckName?:string;
-  fetchedCard?: fetchedFlashcard | null
+  deckName?: string;
+  fetchedCard?: fetchedFlashcard | null;
+  setEditModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [flip, setFlip] = useState(false);
-  const handleCardEdit = (_id: string) => {
-    // Handle card edit logic here
-    console.log(`Edit card at index ${_id}`);
-  };
+  
   const handleCardDelete = async (_id: string) => {
     // Handle card delete logic here
     console.log(`Delete card at index ${_id}`);
     try {
-      const response = await fetch(`http://localhost:5000/api/flashcard/${_id}`,{
-        method: 'DELETE',
-      })
+      const response = await fetch(
+        `http://localhost:5000/api/flashcard/${_id}`,
+        {
+          method: "DELETE",
+        }
+      );
       const result = await response.json();
-      console.log(result) 
-      if(result?.success){
-        toast.success(result.message)
+      console.log(result);
+      if (result?.success) {
+        toast.success(result.message);
       }
     } catch (error) {
-      console.log('There was an error deleting the flashcard', error)
+      console.log("There was an error deleting the flashcard", error);
     }
   };
 
@@ -85,12 +87,16 @@ export default function FlipCard({
           >
             {/* deck name */}
             <span className="text-xs bg-[#0e0e0e] px-3 py-2 rounded-full bg">
-              {fetchedCard? fetchedCard?.deckName : deckName ? deckName : 'Not selected'}
+              {fetchedCard
+                ? fetchedCard?.deckName
+                : deckName
+                ? deckName
+                : "Not selected"}
             </span>
             {/* edit and delete*/}
             <div>
               <button
-                onClick={() => handleCardEdit(fetchedCard?._id as string)}
+                onClick={() => setEditModal(true)}
                 disabled={!fetchedCard}
                 className="text-xs disabled:cursor-not-allowed disabled:bg-[#1d1d1d] disabled:text-gray-400 bg-[#0e0e0e]  px-3 py-2 rounded-full ms-2 cursor-pointer"
               >
@@ -126,6 +132,8 @@ export default function FlipCard({
           </div>
         </div>
       </div>
+
+      <div></div>
     </div>
   );
 }

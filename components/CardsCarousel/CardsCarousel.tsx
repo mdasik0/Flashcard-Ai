@@ -6,6 +6,7 @@ import { GrFormPrevious } from "react-icons/gr";
 import FlipCard from "../FlashCard/FlashCard";
 import Link from "next/link";
 import { RiRobot2Line } from "react-icons/ri";
+import { IoMdClose } from "react-icons/io";
 export default function CardsCarousel() {
   // const fakes = [
   //   {
@@ -55,6 +56,13 @@ export default function CardsCarousel() {
   // ];
   const [flashcards, setFlashcards] = useState([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const [editModal, setEditModal] = useState(false);
+
+  const handleCardEdit = (_id: string) => {
+    // Handle card edit logic here
+    console.log(`Edit card at index ${_id}`);
+  };
+
   const goNext = () => {
     const nextDemoElement =
       document.querySelector(".nextDemoElement")?.classList;
@@ -64,7 +72,9 @@ export default function CardsCarousel() {
       nextDemoElement?.add("flying-card-next");
     }
     setTimeout(() => {
-      setCarouselIndex((prev) => (prev >= flashcards?.length - 1 ? 0 : prev + 1));
+      setCarouselIndex((prev) =>
+        prev >= flashcards?.length - 1 ? 0 : prev + 1
+      );
     }, 500);
     setTimeout(() => {
       nextDemoElement?.add("transition-opacity");
@@ -83,7 +93,9 @@ export default function CardsCarousel() {
       prevDemoElement?.add("flying-card-previous");
     }
     setTimeout(() => {
-      setCarouselIndex((prev) => (prev <= 0 ? flashcards?.length - 1 : prev - 1));
+      setCarouselIndex((prev) =>
+        prev <= 0 ? flashcards?.length - 1 : prev - 1
+      );
     }, 500);
     setTimeout(() => {
       prevDemoElement?.add("transition-opacity");
@@ -94,55 +106,133 @@ export default function CardsCarousel() {
     }, 800);
   };
 
-  const activeDeckId = JSON.parse(localStorage.getItem('activeDeck') as string)
+  const activeDeckId = JSON.parse(localStorage.getItem("activeDeck") as string);
 
-  useEffect(()=>{
-    const fetchFlashcardData = async() =>{
+  useEffect(() => {
+    const fetchFlashcardData = async () => {
       try {
-        if(!activeDeckId) {
-          return console.log('there is no deck id to fetch the data with')
+        if (!activeDeckId) {
+          return console.log("there is no deck id to fetch the data with");
         }
-        const response = await fetch(`http://localhost:5000/api/flashcards/${activeDeckId}`)
-        const result = await response.json()
-        
-        setFlashcards(result?.data ? result?.data : [])
-      } catch (error) {
-        console.log('there was an error fetching cards data',error)
-      }
-    }
+        const response = await fetch(
+          `http://localhost:5000/api/flashcards/${activeDeckId}`
+        );
+        const result = await response.json();
 
-    fetchFlashcardData()
-  },[activeDeckId])
+        setFlashcards(result?.data ? result?.data : []);
+      } catch (error) {
+        console.log("there was an error fetching cards data", error);
+      }
+    };
+
+    fetchFlashcardData();
+  }, [activeDeckId]);
 
   return (
     <div className="h-screen w-full sm:w-[calc(100vw-90px)] flex items-center justify-center">
-      {
-        flashcards?.length <= 0 ? <div>
+      {flashcards?.length <= 0 ? (
+        <div>
           <h1 className="text-4xl mb-2">No Flashcard available</h1>
-          <p className="text-gray-600 text-center duration-300 flex items-center gap-2"><span className="flex items-center gap-2 group"><Link className="hover:underline hover:text-blue-500 duration-300 cursor-pointer" href={'/'}>Generate Flashcard</Link> with <RiRobot2Line className="group-hover:text-blue-500" /></span> or <span className="hover:text-green-500 border-dashed hover:border-b hover:border-green-500 duration-300 cursor-pointer">Add Manually</span></p>
-        </div> : <div className="carousel-container h-screen w-[500px] relative">
-        <div className="carousel-cards-ui relative flex items-center justify-center h-full">
-          <div className="absolute z-0 w-[330px] h-[480px] bg-[#1f1f1f] rounded-xl rotate-6"></div>
-          <div className="absolute z-10 w-[330px] h-[480px] bg-[#1f1f1f]  rounded-xl -rotate-3 -translate-x-1.5 translate-y-2"></div>
-          <div className="absolute w-[330px] h-[480px] rotate-3 bg-[#181818] rounded-xl prevDemoElement"></div>
-          <div className="w-[330px] h-[480px] rounded-xl absolute z-30">
-             <FlipCard
-              card={null}
-              i={carouselIndex}
-              cardSelection={false}
-              fetchedCard={flashcards?.length == 0 ? null : flashcards[carouselIndex]}
-            />
+          <p className="text-gray-600 text-center duration-300 flex items-center gap-2">
+            <span className="flex items-center gap-2 group">
+              <Link
+                className="hover:underline hover:text-blue-500 duration-300 cursor-pointer"
+                href={"/"}
+              >
+                Generate Flashcard
+              </Link>{" "}
+              with <RiRobot2Line className="group-hover:text-blue-500" />
+            </span>{" "}
+            or{" "}
+            <span className="hover:text-green-500 border-dashed hover:border-b hover:border-green-500 duration-300 cursor-pointer">
+              Add Manually
+            </span>
+          </p>
+        </div>
+      ) : (
+        <div className="carousel-container h-screen w-[500px] relative">
+          <div className="carousel-cards-ui relative flex items-center justify-center h-full">
+            <div className="absolute z-0 w-[330px] h-[480px] bg-[#1f1f1f] rounded-xl rotate-6"></div>
+            <div className="absolute z-10 w-[330px] h-[480px] bg-[#1f1f1f]  rounded-xl -rotate-3 -translate-x-1.5 translate-y-2"></div>
+            <div className="absolute w-[330px] h-[480px] rotate-3 bg-[#181818] rounded-xl prevDemoElement"></div>
+            <div className="w-[330px] h-[480px] rounded-xl absolute z-30">
+              <FlipCard
+                card={null}
+                i={carouselIndex}
+                cardSelection={false}
+                setEditModal={setEditModal}
+                fetchedCard={
+                  flashcards?.length == 0 ? null : flashcards[carouselIndex]
+                }
+              />
+            </div>
+            <div className="nextDemoElement"></div>
           </div>
-          <div className="nextDemoElement"></div>
+          {flashcards?.length <= 1 ? (
+            ""
+          ) : (
+            <div className="flex items-center justify-between w-full absolute top-1/2 ">
+              <button
+                title="previous"
+                className="bg-[#0E0E0E] text-xl p-3 rounded-full hover:bg-[#181818] duration-300 cursor-pointer"
+                onClick={goPrevious}
+              >
+                <GrFormPrevious />
+              </button>
+              <button
+                title="next"
+                className="bg-[#0E0E0E] text-xl p-3 rounded-full hover:bg-[#181818] duration-300 cursor-pointer"
+                onClick={goNext}
+              >
+                <MdNavigateNext />
+              </button>
+            </div>
+          )}
         </div>
-        {
-          flashcards?.length <= 1 ? "" : <div className="flex items-center justify-between w-full absolute top-1/2 ">
-          <button title="previous" className="bg-[#0E0E0E] text-xl p-3 rounded-full hover:bg-[#181818] duration-300 cursor-pointer" onClick={goPrevious}><GrFormPrevious /></button>
-          <button title="next" className="bg-[#0E0E0E] text-xl p-3 rounded-full hover:bg-[#181818] duration-300 cursor-pointer" onClick={goNext}><MdNavigateNext /></button>
+      )}
+      {editModal && (
+        <div className="absolute top-0 left-0 z-50 w-screen h-screen bg-black/10 backdrop-blur-md flex items-center justify-center">
+          <div className="w-[350px] h-[380px] bg-[#0E0E0E] border-4 border-[#181818] rounded-xl p-4 flex flex-col justify-between items-start relative">
+            <div className="w-full">
+              <h1 className="text-2xl mb-3">Edit Card</h1>
+              <div className="w-full flex flex-col h-full gap-4">
+                <label
+                  htmlFor="question"
+                  className="flex flex-col items-start text-[#808080] gap-1 text-sm w-full"
+                >
+                  Question
+                  <textarea
+                    className="bg-[#0A0A0A] w-full h-[64px] p-3 rounded-lg text-white resize-none overflow-hidden"
+                    name="question"
+                    placeholder="Enter your Question"
+                    rows={3}
+                  />
+                </label>
+                <label
+                  htmlFor="answer"
+                  className="flex flex-col items-start text-[#808080] gap-1 text-sm w-full flex-1"
+                >
+                  Answer
+                  <textarea
+                    className="bg-[#0A0A0A] w-full h-full p-3 rounded-lg text-white resize-none overflow-hidden"
+                    name="answer"
+                    placeholder="Enter your Answer"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="flex gap-4 items-center">
+              <button className="px-4 py-1.5 bg-green-600 hover:bg-green-700 duration-500 cursor-pointer rounded-lg">
+              Submit
+            </button>
+            <button onClick={() => setEditModal(false)} className="px-4 py-1.5 bg-red-600 hover:bg-red-700 duration-500 cursor-pointer rounded-lg flex justify-center items-center gap-1">
+              Cancel
+            </button>
+            </div>
+          </div>
         </div>
-        }
-      </div>
-      }
+      )}
     </div>
   );
 }
