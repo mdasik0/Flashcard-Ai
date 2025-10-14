@@ -6,7 +6,6 @@ import { GrFormPrevious } from "react-icons/gr";
 import FlipCard from "../FlashCard/FlashCard";
 import Link from "next/link";
 import { RiRobot2Line } from "react-icons/ri";
-import { IoMdClose } from "react-icons/io";
 export default function CardsCarousel() {
   // const fakes = [
   //   {
@@ -56,12 +55,12 @@ export default function CardsCarousel() {
   // ];
   const [flashcards, setFlashcards] = useState([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const [editModal, setEditModal] = useState(false);
+  const [editModal, setEditModal] = useState({cardData:{question:"", answer:""},showModal:false});
 
-  const handleCardEdit = (_id: string) => {
-    // Handle card edit logic here
-    console.log(`Edit card at index ${_id}`);
-  };
+  // const handleCardEdit = (_id: string) => {
+  //   // Handle card edit logic here
+  //   console.log(`Edit card at index ${_id}`);
+  // };
 
   const goNext = () => {
     const nextDemoElement =
@@ -190,7 +189,7 @@ export default function CardsCarousel() {
           )}
         </div>
       )}
-      {editModal && (
+      {editModal?.showModal && (
         <div className="absolute top-0 left-0 z-50 w-screen h-screen bg-black/10 backdrop-blur-md flex items-center justify-center">
           <div className="w-[350px] h-[380px] bg-[#0E0E0E] border-4 border-[#181818] rounded-xl p-4 flex flex-col justify-between items-start relative">
             <div className="w-full">
@@ -202,7 +201,8 @@ export default function CardsCarousel() {
                 >
                   Question
                   <textarea
-                    className="bg-[#0A0A0A] w-full h-[64px] p-3 rounded-lg text-white resize-none overflow-hidden"
+                  defaultValue={editModal?.cardData?.question}
+                    className="bg-[#0A0A0A] w-full h-[64px] px-3 py-2 rounded-lg text-white resize-none overflow-hidden"
                     name="question"
                     placeholder="Enter your Question"
                     rows={3}
@@ -214,7 +214,8 @@ export default function CardsCarousel() {
                 >
                   Answer
                   <textarea
-                    className="bg-[#0A0A0A] w-full h-full p-3 rounded-lg text-white resize-none overflow-hidden"
+                  defaultValue={editModal?.cardData?.answer}
+                    className="bg-[#0A0A0A] w-full h-full px-3 py-2 rounded-lg text-white resize-none overflow-hidden"
                     name="answer"
                     placeholder="Enter your Answer"
                   />
@@ -226,7 +227,7 @@ export default function CardsCarousel() {
               <button className="px-4 py-1.5 bg-green-600 hover:bg-green-700 duration-500 cursor-pointer rounded-lg">
               Submit
             </button>
-            <button onClick={() => setEditModal(false)} className="px-4 py-1.5 bg-red-600 hover:bg-red-700 duration-500 cursor-pointer rounded-lg flex justify-center items-center gap-1">
+            <button onClick={() => setEditModal({cardData:{question:"", answer:""},showModal:false})} className="px-4 py-1.5 bg-red-600 hover:bg-red-700 duration-500 cursor-pointer rounded-lg flex justify-center items-center gap-1">
               Cancel
             </button>
             </div>
