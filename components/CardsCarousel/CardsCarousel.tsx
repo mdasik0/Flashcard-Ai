@@ -57,7 +57,12 @@ export default function CardsCarousel() {
   // ];
   const [flashcards, setFlashcards] = useState<fetchedFlashcard[]>([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const [editModal, setEditModal] = useState({
+  const [editModal, setEditModal] = useState<{
+    _id: string | undefined;
+    question: string | undefined;
+    answer: string | undefined;
+    showModal: boolean;
+  }>({
     _id: "",
     question: "",
     answer: "",
@@ -71,8 +76,8 @@ export default function CardsCarousel() {
       );
     }
     const updatedContent = {
-      question: editModal.question,
-      answer: editModal.answer,
+      question: editModal.question || '',
+      answer: editModal.answer || '',
     };
     try {
       const response = await fetch(
@@ -281,7 +286,7 @@ export default function CardsCarousel() {
 
             <div className="flex gap-4 items-center">
               <button
-                onClick={() => handleCardEdit(editModal?._id)}
+                onClick={() => editModal._id && handleCardEdit(editModal._id)}
                 className="px-4 py-1.5 bg-green-600 hover:bg-green-700 duration-500 cursor-pointer rounded-lg"
               >
                 Submit
