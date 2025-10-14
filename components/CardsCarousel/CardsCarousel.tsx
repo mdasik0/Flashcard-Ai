@@ -6,6 +6,8 @@ import { GrFormPrevious } from "react-icons/gr";
 import FlipCard from "../FlashCard/FlashCard";
 import Link from "next/link";
 import { RiRobot2Line } from "react-icons/ri";
+import toast from "react-hot-toast";
+import { fetchedFlashcard } from "@/types/flashcard";
 export default function CardsCarousel() {
   // const fakes = [
   //   {
@@ -53,14 +55,59 @@ export default function CardsCarousel() {
   //     updatedAt: "2025-10-05T11:40:20.063Z",
   //   },
   // ];
-  const [flashcards, setFlashcards] = useState([]);
+  const [flashcards, setFlashcards] = useState<fetchedFlashcard[]>([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const [editModal, setEditModal] = useState({cardData:{question:"", answer:""},showModal:false});
+  const [editModal, setEditModal] = useState({
+    _id: "",
+    question: "",
+    answer: "",
+    showModal: false,
+  });
+  const handleCardEdit = async (_id: string) => {
+    console.log(`Edit card at index ${_id}`);
+    if (!_id) {
+      return console.log(
+        "Flashcard is not available for change. missing field: _id"
+      );
+    }
+    const updatedContent = {
+      question: editModal.question,
+      answer: editModal.answer,
+    };
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/flashcard/${_id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedContent),
+        }
+      );
+      const result = await response.json();
+      console.log(result);
+      if (result.success) {
+        toast.success(result.message);
+        setEditModal({ _id: "", question: "", answer: "", showModal: false });
 
-  // const handleCardEdit = (_id: string) => {
-  //   // Handle card edit logic here
-  //   console.log(`Edit card at index ${_id}`);
-  // };
+        // FIX: Update the existing card instead of adding a new one
+        setFlashcards((prevCards) =>
+          prevCards.map((card: fetchedFlashcard) =>
+            card._id === _id
+              ? { ...card, ...updatedContent } // Spread updatedContent correctly
+              : card
+          )
+        );
+      }
+    } catch (error) {
+      // FIX: Proper error handling
+      console.log(
+        "There was an error updating the flashcard",
+        error instanceof Error ? error.message : "Unknown error"
+      );
+    }
+  };
 
   const goNext = () => {
     const nextDemoElement =
@@ -201,7 +248,13 @@ export default function CardsCarousel() {
                 >
                   Question
                   <textarea
-                  defaultValue={editModal?.cardData?.question}
+                    onChange={(e) =>
+                      setEditModal({
+                        ...editModal,
+                        question: e.target.value,
+                      })
+                    }
+                    defaultValue={editModal?.question}
                     className="bg-[#0A0A0A] w-full h-[64px] px-3 py-2 rounded-lg text-white resize-none overflow-hidden"
                     name="question"
                     placeholder="Enter your Question"
@@ -214,7 +267,10 @@ export default function CardsCarousel() {
                 >
                   Answer
                   <textarea
-                  defaultValue={editModal?.cardData?.answer}
+                    onChange={(e) =>
+                      setEditModal({ ...editModal, answer: e.target.value })
+                    }
+                    defaultValue={editModal?.answer}
                     className="bg-[#0A0A0A] w-full h-full px-3 py-2 rounded-lg text-white resize-none overflow-hidden"
                     name="answer"
                     placeholder="Enter your Answer"
@@ -224,12 +280,25 @@ export default function CardsCarousel() {
             </div>
 
             <div className="flex gap-4 items-center">
-              <button className="px-4 py-1.5 bg-green-600 hover:bg-green-700 duration-500 cursor-pointer rounded-lg">
-              Submit
-            </button>
-            <button onClick={() => setEditModal({cardData:{question:"", answer:""},showModal:false})} className="px-4 py-1.5 bg-red-600 hover:bg-red-700 duration-500 cursor-pointer rounded-lg flex justify-center items-center gap-1">
-              Cancel
-            </button>
+              <button
+                onClick={() => handleCardEdit(editModal?._id)}
+                className="px-4 py-1.5 bg-green-600 hover:bg-green-700 duration-500 cursor-pointer rounded-lg"
+              >
+                Submit
+              </button>
+              <button
+                onClick={() =>
+                  setEditModal({
+                    _id: "",
+                    question: "",
+                    answer: "",
+                    showModal: false,
+                  })
+                }
+                className="px-4 py-1.5 bg-red-600 hover:bg-red-700 duration-500 cursor-pointer rounded-lg flex justify-center items-center gap-1"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

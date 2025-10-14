@@ -20,7 +20,7 @@ export default function FlipCard({
   cardSelection?: boolean;
   deckName?: string;
   fetchedCard?: fetchedFlashcard | null;
-  setEditModal: React.Dispatch<React.SetStateAction<{cardData: fetchedFlashcard | null | undefined,showModal:boolean}>>;
+  setEditModal: React.Dispatch<React.SetStateAction<{_id: string | undefined, question: string | undefined, answer: string | undefined,showModal:boolean}>>;
 }) {
   const [flip, setFlip] = useState(false);
   
@@ -96,7 +96,7 @@ export default function FlipCard({
             {/* edit and delete*/}
             <div>
               <button
-                onClick={() => setEditModal({cardData:fetchedCard, showModal: true})}
+                onClick={() => setEditModal({_id: fetchedCard?._id,question: fetchedCard?.question, answer: fetchedCard?.answer, showModal: true})}
                 disabled={!fetchedCard}
                 className="text-xs disabled:cursor-not-allowed disabled:bg-[#1d1d1d] disabled:text-gray-400 bg-[#0e0e0e]  px-3 py-2 rounded-full ms-2 cursor-pointer"
               >
