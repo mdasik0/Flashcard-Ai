@@ -2,28 +2,30 @@
 import { useState } from "react";
 import "./flashcard.css";
 import { roboto } from "@/lib/fonts";
-import { fetchedFlashcard, Flashcard } from "@/types/flashcard";
+import { editModalObj, fetchedFlashcard, generatedFlashcard, ReactSetState } from "@/types/flashcard";
 import Image from "next/image";
 import QueSvg from "@/public/Svg/Question_icon.svg";
 import AnsSvg from "@/public/Svg/Answer_icon.svg";
 import toast from "react-hot-toast";
 
-export default function FlipCard({
-  card,
-  i,
-  fetchedCard,
-  deckName,
-  setEditModal,
-}: {
-  card: Flashcard | null;
-  i: number;
-  cardSelection?: boolean;
+type FlashCardProps = {
+  generatedFlashcard?: generatedFlashcard;
+  fetchedFlashcard?: fetchedFlashcard;
   deckName?: string;
-  fetchedCard?: fetchedFlashcard | null;
-  setEditModal: React.Dispatch<React.SetStateAction<{_id: string | undefined, question: string | undefined, answer: string | undefined,showModal:boolean}>>;
-}) {
+  i: number;
+  cardSelection: boolean;
+  setEditModal?: ReactSetState<editModalObj>;
+};
+
+export default function FlashCard({
+  generatedFlashcard,
+  fetchedFlashcard,
+  deckName,
+  i,
+  setEditModal,
+}: FlashCardProps) {
   const [flip, setFlip] = useState(false);
-  
+
   const handleCardDelete = async (_id: string) => {
     // Handle card delete logic here
     console.log(`Delete card at index ${_id}`);
@@ -72,7 +74,9 @@ export default function FlipCard({
                   whiteSpace: "normal",
                 }}
               >
-                {fetchedCard ? fetchedCard?.question : card?.question}
+                {fetchedFlashcard
+                  ? fetchedFlashcard?.question
+                  : generatedFlashcard?.question}
               </p>
             </div>
 
@@ -87,8 +91,8 @@ export default function FlipCard({
           >
             {/* deck name */}
             <span className="text-xs bg-[#0e0e0e] px-3 py-2 rounded-full bg">
-              {fetchedCard
-                ? fetchedCard?.deckName
+              {fetchedFlashcard
+                ? fetchedFlashcard?.deckName
                 : deckName
                 ? deckName
                 : "Not selected"}
@@ -96,15 +100,24 @@ export default function FlipCard({
             {/* edit and delete*/}
             <div>
               <button
-                onClick={() => setEditModal({_id: fetchedCard?._id,question: fetchedCard?.question, answer: fetchedCard?.answer, showModal: true})}
-                disabled={!fetchedCard}
+                onClick={() =>
+                  setEditModal?.({
+                    _id: fetchedFlashcard!._id,
+                    question: fetchedFlashcard!.question,
+                    answer: fetchedFlashcard!.answer,
+                    showModal: true,
+                  })
+                }
+                disabled={!fetchedFlashcard}
                 className="text-xs disabled:cursor-not-allowed disabled:bg-[#1d1d1d] disabled:text-gray-400 bg-[#0e0e0e]  px-3 py-2 rounded-full ms-2 cursor-pointer"
               >
                 Edit
               </button>
               <button
-                onClick={() => handleCardDelete(fetchedCard?._id as string)}
-                disabled={!fetchedCard}
+                onClick={() =>
+                  handleCardDelete(fetchedFlashcard?._id as string)
+                }
+                disabled={!fetchedFlashcard}
                 className="text-xs disabled:cursor-not-allowed disabled:bg-[#1d1d1d] disabled:text-gray-400 bg-[#c21313] px-3 py-2 rounded-full ms-2 cursor-pointer"
               >
                 Delete
@@ -127,7 +140,9 @@ export default function FlipCard({
               alt="Question_icon"
             />
             <span className="relative z-10" style={{ whiteSpace: "normal" }}>
-              {fetchedCard ? fetchedCard?.answer : card?.answer}
+              {fetchedFlashcard
+                ? fetchedFlashcard?.answer
+                : generatedFlashcard?.answer}
             </span>
           </div>
         </div>

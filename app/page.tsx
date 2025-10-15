@@ -1,15 +1,16 @@
 // UI Component (page.tsx)
 "use client";
-import FlipCard from "@/components/FlashCard/FlashCard";
+import FlashCard from "@/components/FlashCard/FlashCard";
+// import FlipCard from "@/components/FlashCard/FlashCard";
 import CardSelectionButton from "@/components/FlashCardSelection/FlashCardSelectionOptions";
 import GenerateInput from "@/components/GenerateInput/GenerateInput";
-import { Flashcard, PostFleshCardApiRes } from "@/types/flashcard";
+import { generatedFlashcard, PostFleshCardApiRes } from "@/types/flashcard";
 import { useSession } from "next-auth/react";
 import React from "react";
 import toast from "react-hot-toast";
 
 export default function Home() {
-  const [flashcard, setFlashcards] = React.useState<Flashcard | null>(null);
+  const [flashcard, setFlashcards] = React.useState<generatedFlashcard | null>(null);
 
   React.useEffect(() => {
     const LastGen_FCString = localStorage.getItem("lastGeneratedFlashcard");
@@ -17,7 +18,7 @@ export default function Home() {
       try {
         const lastGeneratedFlashcard = JSON.parse(
           LastGen_FCString
-        ) as Flashcard;
+        ) as generatedFlashcard;
         setFlashcards(lastGeneratedFlashcard);
       } catch (error) {
         console.error("Error parsing flashcard from localStorage:", error);
@@ -82,7 +83,7 @@ export default function Home() {
                   <div className="flex flex-col">
                     {/* {flashcards} */}
                     <div className="w-[350px] sm:h-[500px] h-[420px]">
-                      <FlipCard cardSelection={true} card={flashcard} i={0} />
+                      <FlashCard cardSelection={true} generatedFlashcard={flashcard} i={0} />
                     </div>
                     <CardSelectionButton
                       saveCardLoading={loading}
