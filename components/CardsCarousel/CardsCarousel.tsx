@@ -159,11 +159,11 @@ export default function CardsCarousel() {
         </div>
       ) : (
         <div className="carousel-container h-screen w-[500px] relative">
-          <div className="carousel-cards-ui relative flex items-center justify-center h-full">
-            <div className="absolute z-0 w-[330px] h-[480px] bg-[#1f1f1f] rounded-xl rotate-6"></div>
-            <div className="absolute z-10 w-[330px] h-[480px] bg-[#1f1f1f]  rounded-xl -rotate-3 -translate-x-1.5 translate-y-2"></div>
-            <div className="absolute w-[330px] h-[480px] rotate-3 bg-[#181818] rounded-xl prevDemoElement"></div>
-            <div className="w-[330px] h-[480px] rounded-xl absolute z-30">
+          <div className="carousel-cards-ui relative flex items-center justify-center h-full sm:mt-0 -mt-10">
+            <div className="absolute z-0 w-[300px] sm:w-[330px] h-[420px] sm:h-[480px] bg-[#1f1f1f] rounded-xl rotate-6"></div>
+            <div className="absolute z-10 w-[300px] sm:w-[330px] h-[420px] sm:h-[480px] bg-[#1f1f1f]  rounded-xl -rotate-3 -translate-x-1.5 translate-y-2"></div>
+            <div className="absolute w-[300px] sm:w-[330px] h-[420px] sm:h-[480px] rotate-3 bg-[#181818] rounded-xl prevDemoElement"></div>
+            <div className="w-[300px] sm:w-[330px] h-[420px] sm:h-[480px] rounded-xl absolute z-30">
               <FlashCard
                 i={carouselIndex}
                 cardSelection={false}
@@ -176,7 +176,7 @@ export default function CardsCarousel() {
           {flashcards?.length <= 1 ? (
             ""
           ) : (
-            <div className="flex items-center justify-between w-full absolute top-1/2 ">
+            <div className="flex items-center justify-end sm:justify-between w-full absolute sm:bottom-1/2 sm:translate-y-1/2 bottom-20 gap-10 sm:gap-0 pb-4 sm:pb-0 px-4 sm:px-0">
               <button
                 title="previous"
                 className="bg-[#0E0E0E] text-xl p-3 rounded-full hover:bg-[#181818] duration-300 cursor-pointer"

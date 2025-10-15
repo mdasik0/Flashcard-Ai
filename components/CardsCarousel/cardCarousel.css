@@ -39,6 +39,27 @@
   }
 }
 
+@media (max-width: 480px) {
+  @keyframes NextAnimation {
+    0% {
+      translate: 40px -80px;
+      rotate: 45deg;
+    }
+    40% {
+      translate: 100px -100px;
+      rotate: 45deg;
+      z-index: 40;
+    }
+    100% {
+      translate: 0px 0px;
+      rotate: 0deg;
+      width: 300px;
+      height: 420px;
+      z-index: 40;
+    }
+  }
+}
+
 .transition-opacity {
   opacity: 0%;
   transition: all 200ms ease-out;
@@ -75,6 +96,36 @@
     rotate: 0deg;
     z-index: 40;
     background-color: #181818;
+  }
+}
+
+@media (max-width: 480px) {
+  .flying-card-previous {
+    width: 300px;
+    height: 420px;
+  }
+
+  @keyframes PrevAnimation {
+    0% {
+      translate: -50px 50px;
+      rotate: 3deg;
+    }
+    40% {
+      translate: -180px 40px;
+      rotate: -45deg;
+      width: 180px;
+      height: 240px;
+      background-color: #131313;
+    }
+    95% {
+      z-index: 100;
+    }
+    100% {
+      translate: 0px 0px;
+      rotate: 0deg;
+      z-index: 40;
+      background-color: #181818;
+    }
   }
 }
 
