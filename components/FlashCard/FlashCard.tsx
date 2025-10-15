@@ -46,8 +46,6 @@ export default function FlashCard({
     }
   };
 
-  //TODO: Flashcard delete option added to the flashcard component
-  //TODO: edit option added to the flashcard component
   return (
     <div
       className="flip-card-container w-full h-full"
