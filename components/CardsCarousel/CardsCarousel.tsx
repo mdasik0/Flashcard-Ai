@@ -9,6 +9,8 @@ import { RiRobot2Line } from "react-icons/ri";
 import { fetchedFlashcard } from "@/types/flashcard";
 import FlashCard from "../FlashCard/FlashCard";
 import EditFlashCardModal from "../EditFlashCardModal/EditFlashCardModal";
+import { IoMdArrowDropdown } from "react-icons/io";
+import FlashCardDeckSelectOption from "../FlashCardSelection/FlashCardDeckSelectOption";
 export default function CardsCarousel() {
   // const fakes = [
   //   {
@@ -137,7 +139,7 @@ export default function CardsCarousel() {
   }, [activeDeckId]);
 
   return (
-    <div className="h-screen w-full sm:w-[calc(100vw-90px)] flex items-center justify-center">
+    <div className="h-screen w-full sm:w-[calc(100vw-90px)] flex items-center justify-center relative">
       {flashcards?.length <= 0 ? (
         <div>
           <h1 className="text-4xl mb-2">No Flashcard available</h1>
@@ -198,6 +200,26 @@ export default function CardsCarousel() {
       {editModal?.showModal && (
         <EditFlashCardModal setEditModal={setEditModal} editModal={editModal} setFlashcards={setFlashcards} />
       )}
+      <ChangeActiveDeckDropdown />
     </div>
   );
+}
+
+
+export function ChangeActiveDeckDropdown() {
+  const [isOpen, setIsOpen] = useState(false)
+  //todo make a func that upon call will fetch the all decks api
+  //todo fetch all decks using userid
+  //todo make an api that will change the active status of the deck
+  //todo make an func that will update localstorage active deck and update deck active status on backend.
+  return (
+    <div className="">
+    <div onClick={() => setIsOpen(!isOpen)} className="flex items-center justify-between absolute bottom-25 left-8 px-4 py-2 bg-[#0E0E0E] rounded-lg duration-300 w-[170px] border-2 border-[#181818]">current deck <IoMdArrowDropdown className={`-mr-1 duration-500 ${isOpen ? 'rotate-180': 'rotate-0'}`} /></div>
+    <div className="flex items-start absolute bottom-40 z-50 left-8 gap-2 bg-[#0E0E0E] rounded-lg duration-300 w-[170px] border-2 border-[#292929] h-fit flex-col p-2">
+      <div className="bg-[#181818] hover:bg-[#1F1F1F] duration-500 w-full px-4 py-2 rounded">i am heelo</div>
+      <div className="bg-[#181818] hover:bg-[#1F1F1F] duration-500 w-full px-4 py-2 rounded">i am heelo</div>
+      <div className="bg-[#181818] hover:bg-[#1F1F1F] duration-500 w-full px-4 py-2 rounded">i am heelo</div>
+      </div>
+    </div>
+  )
 }
