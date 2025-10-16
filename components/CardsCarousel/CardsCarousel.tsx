@@ -10,7 +10,6 @@ import { fetchedFlashcard } from "@/types/flashcard";
 import FlashCard from "../FlashCard/FlashCard";
 import EditFlashCardModal from "../EditFlashCardModal/EditFlashCardModal";
 import { IoMdArrowDropdown } from "react-icons/io";
-import FlashCardDeckSelectOption from "../FlashCardSelection/FlashCardDeckSelectOption";
 export default function CardsCarousel() {
   // const fakes = [
   //   {

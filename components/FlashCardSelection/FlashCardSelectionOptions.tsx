@@ -1,15 +1,15 @@
 "use client";
 import { Deck, GetDeckApiRes } from "@/types/deck";
-import { Flashcard } from "@/types/flashcard";
 import { useSession } from "next-auth/react";
 import React, { useEffect } from "react";
 import CreateNewDeckModal from "../UtilityComp/CreateNewDeckModal";
 import FlashCardCancelButton from "./FlashCardCancelButton";
 import FlashCardSaveButton from "./FlashCardSaveButton";
 import FlashCardDeckSelectOption from "./FlashCardDeckSelectOption";
+import { generatedFlashcard } from "@/types/flashcard";
 
 type CardSelectionButtonProps = {
-  setFlashcards: React.Dispatch<React.SetStateAction<Flashcard | null>>;
+  setFlashcards: React.Dispatch<React.SetStateAction<generatedFlashcard | null>>;
   handleSaveFlashCard: (deckName: string, deckId: string) => void;
   saveCardLoading: boolean;
 };
