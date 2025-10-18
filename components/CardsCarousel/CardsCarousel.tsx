@@ -13,6 +13,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import { getDecksByUserId } from "@/lib/api-calls/deck";
 import { Deck } from "@/types/deck";
+import toast from "react-hot-toast";
 export default function CardsCarousel() {
   // const fakes = [
   //   {
@@ -62,6 +63,7 @@ export default function CardsCarousel() {
   // ];
   const [flashcards, setFlashcards] = useState<fetchedFlashcard[]>([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const [activeDeck, setActiveDeck] = useState(localStorage.getItem("activeDeck"))
   const [editModal, setEditModal] = useState<{
     _id: string | undefined;
     question: string | undefined;
@@ -117,16 +119,15 @@ export default function CardsCarousel() {
     }, 800);
   };
 
-  const activeDeckId = JSON.parse(localStorage.getItem("activeDeck") as string);
 
   useEffect(() => {
     const fetchFlashcardData = async () => {
       try {
-        if (!activeDeckId) {
+        if (!activeDeck) {
           return console.log("there is no deck id to fetch the data with");
         }
         const response = await fetch(
-          `http://localhost:5000/api/flashcards/${activeDeckId}`
+          `http://localhost:5000/api/flashcards/${activeDeck}`
         );
         const result = await response.json();
 
@@ -137,7 +138,7 @@ export default function CardsCarousel() {
     };
 
     fetchFlashcardData();
-  }, [activeDeckId]);
+  }, [activeDeck]);
 
   return (
     <div className="h-screen w-full sm:w-[calc(100vw-90px)] flex items-center justify-center relative">
@@ -205,12 +206,20 @@ export default function CardsCarousel() {
           setFlashcards={setFlashcards}
         />
       )}
-      <ChangeActiveDeckDropdown />
+      <ChangeActiveDeckDropdown setActiveDeck={setActiveDeck} activeDeck={activeDeck} />
     </div>
   );
 }
 
-export function ChangeActiveDeckDropdown() {
+interface ChangeActiveDeckDropdownProps {
+  setActiveDeck: React.Dispatch<React.SetStateAction<string | null>>;
+  activeDeck: string | null;
+}
+
+const ChangeActiveDeckDropdown: React.FC<ChangeActiveDeckDropdownProps> = ({ 
+  setActiveDeck, 
+  activeDeck 
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [decks, setDecks] = useState<Deck[]>([]);
   const { data } = useSession();
@@ -226,9 +235,46 @@ export function ChangeActiveDeckDropdown() {
       getDecks();
     }
   }, [data?.user.id]);
-  //todo make a func that upon call will fetch the all decks api
-  //todo fetch all decks using userid
-  //todo make an api that will change the active status of the deck
+
+  const handleChangeDeck = async (deckId: string) => {
+  // Early return if deck is already active
+  if (activeDeck === deckId) {
+    return toast.success("This deck is already active.");
+  }
+
+  try {
+    const result = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/set-active-deck/${deckId}`,
+      {
+        method: "PATCH",
+      }
+    );
+
+    // Check if response is OK before parsing
+    if (!result.ok) {
+      const errorData = await result.json();
+      return toast.error(errorData.message || "Failed to update the deck as active.");
+    }
+
+    const response = await result.json();
+    
+    if (response.success) {
+      // Store as string (no need for JSON.stringify)
+      localStorage.setItem("activeDeck", deckId);
+      
+      // Update state (assuming you have setActiveDeck)
+      setActiveDeck(deckId);
+      
+      return toast.success(response.message);
+    } else {
+      return toast.error(response.message || "Failed to update the deck as active. Try again!");
+    }
+    
+  } catch (error) {
+    console.log("There was an error setting another deck active", error);
+    toast.error("An unexpected error occurred. Please try again.");
+  }
+};
   //todo make an func that will update localstorage active deck and update deck active status on backend.
   return (
     <div className="">
@@ -244,9 +290,15 @@ export function ChangeActiveDeckDropdown() {
       {isOpen && (
         <div className="flex items-start absolute bottom-40 z-50 left-8 gap-2 bg-[#0E0E0E] rounded-lg duration-300 w-[170px] border-2 border-[#292929] h-fit flex-col p-2">
           {decks.map((deck) => (
-            <div key={deck._id} className="bg-[#181818] hover:bg-[#1F1F1F] duration-500 w-full px-4 py-2 rounded">
-              {deck.deckName}
-            </div>
+            <button
+              onClick={() => handleChangeDeck(deck?._id)}
+              key={deck?._id}
+              className={`bg-[#181818] hover:bg-[#1F1F1F] ${
+                activeDeck === deck._id ? "text-green-500" : "text-white"
+              } duration-500 w-full px-4 py-2 rounded cursor-pointer`}
+            >
+              {deck?.deckName}
+            </button>
           ))}
         </div>
       )}
