@@ -10,6 +10,9 @@ import { fetchedFlashcard } from "@/types/flashcard";
 import FlashCard from "../FlashCard/FlashCard";
 import EditFlashCardModal from "../EditFlashCardModal/EditFlashCardModal";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { useSession } from "next-auth/react";
+import { getDecksByUserId } from "@/lib/api-calls/deck";
+import { Deck } from "@/types/deck";
 export default function CardsCarousel() {
   // const fakes = [
   //   {
@@ -70,7 +73,6 @@ export default function CardsCarousel() {
     answer: "",
     showModal: false,
   });
-  
 
   const goNext = () => {
     const nextDemoElement =
@@ -197,28 +199,57 @@ export default function CardsCarousel() {
         </div>
       )}
       {editModal?.showModal && (
-        <EditFlashCardModal setEditModal={setEditModal} editModal={editModal} setFlashcards={setFlashcards} />
+        <EditFlashCardModal
+          setEditModal={setEditModal}
+          editModal={editModal}
+          setFlashcards={setFlashcards}
+        />
       )}
       <ChangeActiveDeckDropdown />
     </div>
   );
 }
 
-
 export function ChangeActiveDeckDropdown() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [decks, setDecks] = useState<Deck[]>([]);
+  const { data } = useSession();
+  useEffect(() => {
+    const getDecks = async () => {
+      const response = await getDecksByUserId(data?.user.id as string);
+      if (response?.success) {
+        setDecks(response?.data);
+      }
+    };
+
+    if (data?.user.id) {
+      getDecks();
+    }
+  }, [data?.user.id]);
   //todo make a func that upon call will fetch the all decks api
   //todo fetch all decks using userid
   //todo make an api that will change the active status of the deck
   //todo make an func that will update localstorage active deck and update deck active status on backend.
   return (
     <div className="">
-    <div onClick={() => setIsOpen(!isOpen)} className="flex items-center justify-between absolute bottom-25 left-8 px-4 py-2 bg-[#0E0E0E] rounded-lg duration-300 w-[170px] border-2 border-[#181818]">current deck <IoMdArrowDropdown className={`-mr-1 duration-500 ${isOpen ? 'rotate-180': 'rotate-0'}`} /></div>
-    <div className="flex items-start absolute bottom-40 z-50 left-8 gap-2 bg-[#0E0E0E] rounded-lg duration-300 w-[170px] border-2 border-[#292929] h-fit flex-col p-2">
-      <div className="bg-[#181818] hover:bg-[#1F1F1F] duration-500 w-full px-4 py-2 rounded">i am heelo</div>
-      <div className="bg-[#181818] hover:bg-[#1F1F1F] duration-500 w-full px-4 py-2 rounded">i am heelo</div>
-      <div className="bg-[#181818] hover:bg-[#1F1F1F] duration-500 w-full px-4 py-2 rounded">i am heelo</div>
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center justify-between absolute bottom-25 left-8 px-4 py-2 bg-[#0E0E0E] rounded-lg duration-300 w-[170px] border-2 border-[#181818]"
+      >
+        current deck{" "}
+        <IoMdArrowDropdown
+          className={`-mr-1 duration-500 ${isOpen ? "rotate-180" : "rotate-0"}`}
+        />
       </div>
+      {isOpen && (
+        <div className="flex items-start absolute bottom-40 z-50 left-8 gap-2 bg-[#0E0E0E] rounded-lg duration-300 w-[170px] border-2 border-[#292929] h-fit flex-col p-2">
+          {decks.map((deck) => (
+            <div key={deck._id} className="bg-[#181818] hover:bg-[#1F1F1F] duration-500 w-full px-4 py-2 rounded">
+              {deck.deckName}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
-  )
+  );
 }

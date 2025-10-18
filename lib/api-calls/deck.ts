@@ -12,12 +12,10 @@ export const getDecksByUserId = async (
   }
 
   try {
-    const response = await fetch(
-      `${process.env.BACKEND_BASE_URL}/api/decks/${creatorId}`,
-      {
-        cache: "force-cache",
-      }
-    );
+    const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/decks/${creatorId}`;
+    const response = await fetch(url, {
+      cache: "force-cache",
+    });
 
     if (!response.ok) {
       throw new Error(`Failed to fetch decks: ${response.status}`);
