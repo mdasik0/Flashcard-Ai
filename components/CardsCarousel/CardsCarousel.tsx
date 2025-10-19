@@ -3,17 +3,14 @@ import React, { useEffect, useRef, useState } from "react";
 import "./cardCarousel.css";
 import { MdNavigateNext } from "react-icons/md";
 import { GrFormPrevious } from "react-icons/gr";
-// import FlashCard from "../FlashCard/FlashCard";
 import Link from "next/link";
 import { RiRobot2Line } from "react-icons/ri";
 import { fetchedFlashcard } from "@/types/flashcard";
 import FlashCard from "../FlashCard/FlashCard";
 import EditFlashCardModal from "../EditFlashCardModal/EditFlashCardModal";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { useSession } from "next-auth/react";
-import { getDecksByUserId } from "@/lib/api-calls/deck";
-import { Deck } from "@/types/deck";
 import toast from "react-hot-toast";
+import { useDecks } from "@/app/providers/deck-provider";
 export default function CardsCarousel() {
   // const fakes = [
   //   {
@@ -63,6 +60,7 @@ export default function CardsCarousel() {
   // ];
   const [flashcards, setFlashcards] = useState<fetchedFlashcard[]>([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const {activeDeckName} = useDecks()
   const [activeDeck, setActiveDeck] = useState(
     localStorage.getItem("activeDeck")
   );
@@ -208,7 +206,7 @@ export default function CardsCarousel() {
         />
       )}
         <div className="absolute sm:right-[16%] text-lg sm:top-[38px] top-4 text-green-500">
-          {flashcards?.[0]?.deckName}
+          {activeDeckName}
         </div>
         <ChangeActiveDeckDropdown
           setActiveDeck={setActiveDeck}
@@ -228,21 +226,8 @@ const ChangeActiveDeckDropdown: React.FC<ChangeActiveDeckDropdownProps> = ({
   activeDeck,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [decks, setDecks] = useState<Deck[]>([]);
-  const { data } = useSession();
   const deckDropRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const getDecks = async () => {
-      const response = await getDecksByUserId(data?.user.id as string);
-      if (response?.success) {
-        setDecks(response?.data);
-      }
-    };
-
-    if (data?.user.id) {
-      getDecks();
-    }
-  }, [data?.user.id]);
+  const {decks} = useDecks()
   useEffect(() => {
     const handleMouseClickEvent = (e: MouseEvent) => {
       if (
@@ -309,7 +294,7 @@ const ChangeActiveDeckDropdown: React.FC<ChangeActiveDeckDropdownProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-between relative px-4 py-2 bg-[#0E0E0E] rounded-lg duration-300 w-[170px] border-2 border-[#181818]"
       >
-        current deck{" "}
+        Change Deck
         <IoMdArrowDropdown
           className={`-mr-1 duration-500 ${isOpen ? "rotate-180" : "rotate-0"}`}
         />
@@ -319,7 +304,7 @@ const ChangeActiveDeckDropdown: React.FC<ChangeActiveDeckDropdownProps> = ({
           ref={deckDropRef}
           className="flex items-start absolute z-50 top-auto bottom-14 sm:top-14 sm:left-0 gap-2 bg-[#0E0E0E] rounded-lg duration-300 w-[170px] border-2 border-[#292929] h-fit flex-col p-2"
         >
-          {decks.map((deck) => (
+          {decks?.map((deck) => (
             <button
               onClick={() => handleChangeDeck(deck?._id)}
               key={deck?._id}
