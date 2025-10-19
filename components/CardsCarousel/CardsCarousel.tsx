@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./cardCarousel.css";
 import { MdNavigateNext } from "react-icons/md";
 import { GrFormPrevious } from "react-icons/gr";
@@ -63,7 +63,9 @@ export default function CardsCarousel() {
   // ];
   const [flashcards, setFlashcards] = useState<fetchedFlashcard[]>([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const [activeDeck, setActiveDeck] = useState(localStorage.getItem("activeDeck"))
+  const [activeDeck, setActiveDeck] = useState(
+    localStorage.getItem("activeDeck")
+  );
   const [editModal, setEditModal] = useState<{
     _id: string | undefined;
     question: string | undefined;
@@ -118,7 +120,6 @@ export default function CardsCarousel() {
       prevDemoElement?.remove("transition-opacity");
     }, 800);
   };
-
 
   useEffect(() => {
     const fetchFlashcardData = async () => {
@@ -206,23 +207,30 @@ export default function CardsCarousel() {
           setFlashcards={setFlashcards}
         />
       )}
-      <ChangeActiveDeckDropdown setActiveDeck={setActiveDeck} activeDeck={activeDeck} />
-    </div>
+        <div className="absolute sm:right-[16%] text-lg sm:top-[38px] top-4 text-green-500">
+          {flashcards?.[0]?.deckName}
+        </div>
+        <ChangeActiveDeckDropdown
+          setActiveDeck={setActiveDeck}
+          activeDeck={activeDeck}
+        />
+      </div>
   );
 }
 
-interface ChangeActiveDeckDropdownProps {
+type ChangeActiveDeckDropdownProps = {
   setActiveDeck: React.Dispatch<React.SetStateAction<string | null>>;
   activeDeck: string | null;
-}
+};
 
-const ChangeActiveDeckDropdown: React.FC<ChangeActiveDeckDropdownProps> = ({ 
-  setActiveDeck, 
-  activeDeck 
+const ChangeActiveDeckDropdown: React.FC<ChangeActiveDeckDropdownProps> = ({
+  setActiveDeck,
+  activeDeck,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [decks, setDecks] = useState<Deck[]>([]);
   const { data } = useSession();
+  const deckDropRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const getDecks = async () => {
       const response = await getDecksByUserId(data?.user.id as string);
@@ -235,52 +243,71 @@ const ChangeActiveDeckDropdown: React.FC<ChangeActiveDeckDropdownProps> = ({
       getDecks();
     }
   }, [data?.user.id]);
-
-  const handleChangeDeck = async (deckId: string) => {
-  // Early return if deck is already active
-  if (activeDeck === deckId) {
-    return toast.success("This deck is already active.");
-  }
-
-  try {
-    const result = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/set-active-deck/${deckId}`,
-      {
-        method: "PATCH",
+  useEffect(() => {
+    const handleMouseClickEvent = (e: MouseEvent) => {
+      if (
+        deckDropRef.current &&
+        !deckDropRef.current.contains(e?.target as Node)
+      ) {
+        setIsOpen(false);
       }
-    );
+    };
 
-    // Check if response is OK before parsing
-    if (!result.ok) {
-      const errorData = await result.json();
-      return toast.error(errorData.message || "Failed to update the deck as active.");
+    if (isOpen) {
+      document.addEventListener("mousedown", handleMouseClickEvent);
     }
 
-    const response = await result.json();
-    
-    if (response.success) {
-      // Store as string (no need for JSON.stringify)
-      localStorage.setItem("activeDeck", deckId);
-      
-      // Update state (assuming you have setActiveDeck)
-      setActiveDeck(deckId);
-      
-      return toast.success(response.message);
-    } else {
-      return toast.error(response.message || "Failed to update the deck as active. Try again!");
+    return () => {
+      document.removeEventListener("mousedown", handleMouseClickEvent);
+    };
+  }, [isOpen, setIsOpen]);
+  const handleChangeDeck = async (deckId: string) => {
+    // Early return if deck is already active
+    if (activeDeck === deckId) {
+      return toast.success("This deck is already active.");
     }
-    
-  } catch (error) {
-    console.log("There was an error setting another deck active", error);
-    toast.error("An unexpected error occurred. Please try again.");
-  }
-};
-  //todo make an func that will update localstorage active deck and update deck active status on backend.
+
+    try {
+      const result = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/set-active-deck/${deckId}`,
+        {
+          method: "PATCH",
+        }
+      );
+
+      // Check if response is OK before parsing
+      if (!result.ok) {
+        const errorData = await result.json();
+        return toast.error(
+          errorData.message || "Failed to update the deck as active."
+        );
+      }
+
+      const response = await result.json();
+
+      if (response.success) {
+        // Store as string (no need for JSON.stringify)
+        localStorage.setItem("activeDeck", deckId);
+
+        // Update state (assuming you have setActiveDeck)
+        setActiveDeck(deckId);
+        setIsOpen(false);
+        return toast.success(response.message);
+      } else {
+        return toast.error(
+          response.message || "Failed to update the deck as active. Try again!"
+        );
+      }
+    } catch (error) {
+      console.log("There was an error setting another deck active", error);
+      toast.error("An unexpected error occurred. Please try again.");
+    }
+  };
   return (
-    <div className="">
+    <div className="absolute  bottom-25 sm:bottom-auto sm:top-8 left-8 sm:left-auto sm:right-10">
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between absolute bottom-25 left-8 px-4 py-2 bg-[#0E0E0E] rounded-lg duration-300 w-[170px] border-2 border-[#181818]"
+        className="flex items-center justify-between relative px-4 py-2 bg-[#0E0E0E] rounded-lg duration-300 w-[170px] border-2 border-[#181818]"
       >
         current deck{" "}
         <IoMdArrowDropdown
@@ -288,7 +315,10 @@ const ChangeActiveDeckDropdown: React.FC<ChangeActiveDeckDropdownProps> = ({
         />
       </div>
       {isOpen && (
-        <div className="flex items-start absolute bottom-40 z-50 left-8 gap-2 bg-[#0E0E0E] rounded-lg duration-300 w-[170px] border-2 border-[#292929] h-fit flex-col p-2">
+        <div
+          ref={deckDropRef}
+          className="flex items-start absolute z-50 top-auto bottom-14 sm:top-14 sm:left-0 gap-2 bg-[#0E0E0E] rounded-lg duration-300 w-[170px] border-2 border-[#292929] h-fit flex-col p-2"
+        >
           {decks.map((deck) => (
             <button
               onClick={() => handleChangeDeck(deck?._id)}
@@ -304,4 +334,4 @@ const ChangeActiveDeckDropdown: React.FC<ChangeActiveDeckDropdownProps> = ({
       )}
     </div>
   );
-}
+};
