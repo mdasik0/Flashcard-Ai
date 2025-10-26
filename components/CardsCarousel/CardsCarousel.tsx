@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState } from "react";
 import "./cardCarousel.css";
 import { MdNavigateNext } from "react-icons/md";
 import { GrFormPrevious } from "react-icons/gr";
@@ -11,59 +11,18 @@ import EditFlashCardModal from "../EditFlashCardModal/EditFlashCardModal";
 import { IoMdArrowDropdown } from "react-icons/io";
 import toast from "react-hot-toast";
 import { useDecks } from "@/app/providers/deck-provider";
+
+
+
 export default function CardsCarousel() {
-  // const fakes = [
-  //   {
-  //     _id: "68e0f1bad8676a85b3665cfd",
-  //     question: "what is bind in js?",
-  //     answer:
-  //       'In JavaScript, "bind" is a method that creates a new function with a specified "this" value.',
-  //     deckId: "68e0bb36d8676a85b3665ceb",
-  //     deckName: "asik gadha",
-  //     userId: "101343459899203208475",
-  //     createdAt: "2025-10-04T10:06:50.463Z",
-  //     updatedAt: "2025-10-04T10:06:50.463Z",
-  //   },
-  //   {
-  //     _id: "68e138d3d8676a85b3665d08",
-  //     question: "what is an event loop?",
-  //     answer:
-  //       "An event loop is a programming construct that waits for and dispatches events or messages in a program.",
-  //     deckId: "68e0bb36d8676a85b3665ceb",
-  //     deckName: "asik gadha",
-  //     userId: "101343459899203208475",
-  //     createdAt: "2025-10-04T15:10:11.462Z",
-  //     updatedAt: "2025-10-04T15:10:11.462Z",
-  //   },
-  //   {
-  //     _id: "68e14517d8676a85b3665d0e",
-  //     question: "what is a State in React?",
-  //     answer:
-  //       "A state in React is a data structure that holds information about a component's current state.",
-  //     deckId: "68e0bb36d8676a85b3665ceb",
-  //     deckName: "asik gadha",
-  //     userId: "101343459899203208475",
-  //     createdAt: "2025-10-04T16:02:31.571Z",
-  //     updatedAt: "2025-10-04T16:02:31.571Z",
-  //   },
-  //   {
-  //     _id: "68e25924ae6e7c6973ae7016",
-  //     question: "what is ES6?",
-  //     answer:
-  //       "ES6 is the sixth major version of JavaScript, introducing features like classes, arrow functions, and modules.",
-  //     deckId: "68e0bb36d8676a85b3665ceb",
-  //     deckName: "asik gadha",
-  //     userId: "101343459899203208475",
-  //     createdAt: "2025-10-05T11:40:20.063Z",
-  //     updatedAt: "2025-10-05T11:40:20.063Z",
-  //   },
-  // ];
   const [flashcards, setFlashcards] = useState<fetchedFlashcard[]>([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const {activeDeckName} = useDecks()
+  //todo: active deck localstorage in state needs review
   const [activeDeck, setActiveDeck] = useState(
     localStorage.getItem("activeDeck")
   );
+  const {decks} = useDecks();
+  const[activeDeckName, setActiveDeckName] = useState('');
   const [editModal, setEditModal] = useState<{
     _id: string | undefined;
     question: string | undefined;
@@ -135,6 +94,10 @@ export default function CardsCarousel() {
         console.log("there was an error fetching cards data", error);
       }
     };
+    //todo : what is the point of this code needs review
+    const active = decks?.find(deck => deck._id === activeDeck)
+    setActiveDeckName(active)
+    console.log(active)
 
     fetchFlashcardData();
   }, [activeDeck]);

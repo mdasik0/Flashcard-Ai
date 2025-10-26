@@ -1,12 +1,12 @@
 "use client";
-import { Deck, GetDeckApiRes } from "@/types/deck";
 import { useSession } from "next-auth/react";
-import React, { useEffect } from "react";
+import React from "react";
 import CreateNewDeckModal from "../UtilityComp/CreateNewDeckModal";
 import FlashCardCancelButton from "./FlashCardCancelButton";
 import FlashCardSaveButton from "./FlashCardSaveButton";
 import FlashCardDeckSelectOption from "./FlashCardDeckSelectOption";
 import { generatedFlashcard } from "@/types/flashcard";
+import { useDecks } from "@/app/providers/deck-provider";
 
 type CardSelectionButtonProps = {
   setFlashcards: React.Dispatch<React.SetStateAction<generatedFlashcard | null>>;
@@ -18,44 +18,14 @@ export default function CardSelectionButton({
   setFlashcards,
   saveCardLoading,
 }: CardSelectionButtonProps) {
-  const [decks, setDecks] = React.useState<Deck[] | []>([]);
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
-  const { data, status } = useSession();
+  const { data } = useSession();
   const [selectedDeck, setSelectedDeck] = React.useState({
     deckName: "",
     deckId: "",
   });
 
-  // used for fetch all decks for > select deck dropdown
-  useEffect(() => {
-    // Wait for authentication to complete
-    if (status === "loading") {
-      return; // Still loading user data
-    }
-
-    if (status === "unauthenticated") {
-      console.log("User not authenticated");
-      return;
-    }
-
-    if (!data?.user?.id) {
-      return;
-    }
-
-    const fetchDecks = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/api/decks/${data.user.id}`
-        );
-        const result: GetDeckApiRes<Deck[]> = await response.json();
-        setDecks(result.data);
-      } catch (error) {
-        console.error("Error fetching decks:", error);
-      }
-    };
-
-    fetchDecks();
-  }, [data?.user?.id, status]);
+  const { decks, setDecks } = useDecks();
 
   return (
     <>

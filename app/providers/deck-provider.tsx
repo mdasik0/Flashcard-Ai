@@ -1,14 +1,14 @@
 // app/providers/deck-provider.tsx
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { getDecksByUserId } from "@/lib/api-calls/deck";
 import { Deck } from "@/types/deck";
 
 type DeckContextType = {
   decks: Deck[];
-  activeDeckName: string | undefined;
+  setDecks: React.Dispatch<React.SetStateAction<Deck[]>>;
   loading: boolean;
   refreshDecks: () => Promise<void>;
 } | null;
@@ -41,14 +41,11 @@ export function DeckProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const currentAcitveDeck = localStorage.getItem('activeDeck')
-  const activeDeckName = decks?.find(deck => deck._id === currentAcitveDeck)?.deckName
-
   useEffect(() => {
     fetchDecks();
   }, [session?.user?.id]);
   return (
-   <DeckContext.Provider value={{ decks,activeDeckName, loading, refreshDecks: fetchDecks }}>
+   <DeckContext.Provider value={{ decks, loading, refreshDecks: fetchDecks, setDecks }}>
       {children}
     </DeckContext.Provider>
   );
