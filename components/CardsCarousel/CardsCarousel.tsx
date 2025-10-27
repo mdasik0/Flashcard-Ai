@@ -11,7 +11,7 @@ import EditFlashCardModal from "../EditFlashCardModal/EditFlashCardModal";
 
 
 
-export default function CardsCarousel() {
+export default function CardsCarousel({activeDeck}: {activeDeck: string | null}) {
   const [flashcards, setFlashcards] = useState<fetchedFlashcard[]>([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
   //todo: active deck localstorage in state needs review
@@ -72,7 +72,6 @@ export default function CardsCarousel() {
 
   useEffect(() => {
 
-    const activeDeck = localStorage.getItem("activeDeck");
     const fetchFlashcardData = async () => {
       try {
         if (!activeDeck) {
@@ -89,7 +88,7 @@ export default function CardsCarousel() {
       }
     };
     fetchFlashcardData();
-  }, []);
+  }, [activeDeck]);
 
   return (
     <div className="h-screen w-full sm:w-[calc(100vw-90px)] flex items-center justify-center relative">

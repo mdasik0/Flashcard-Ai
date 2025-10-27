@@ -7,13 +7,16 @@ import { IoMdArrowDropdown } from "react-icons/io";
 type ChangeActiveDeckDropdownProps = {
   setActiveDeck: React.Dispatch<React.SetStateAction<string | null>>;
   activeDeck: string | null;
-  decks: Deck[]
+  decks: Deck[];
+  activeDeckIndicator: string | null;
 };
 const ChangeActiveDeck: React.FC<ChangeActiveDeckDropdownProps> = ({
   setActiveDeck,
   activeDeck,
   decks,
+  activeDeckIndicator
 }) => {
+    
   const [isOpen, setIsOpen] = useState(false);
   const deckDropRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -76,6 +79,7 @@ const ChangeActiveDeck: React.FC<ChangeActiveDeckDropdownProps> = ({
       toast.error("An unexpected error occurred. Please try again.");
     }
   };
+  
   return (
     <div className="absolute  bottom-25 sm:bottom-auto sm:top-8 left-8 sm:left-auto sm:right-10">
       <div
@@ -97,7 +101,7 @@ const ChangeActiveDeck: React.FC<ChangeActiveDeckDropdownProps> = ({
               onClick={() => handleChangeDeck(deck?._id)}
               key={deck?._id}
               className={`bg-[#181818] hover:bg-[#1F1F1F] ${
-                activeDeck === deck._id ? "text-green-500" : "text-white"
+                activeDeckIndicator === deck._id ? "text-green-500" : "text-white"
               } duration-500 w-full px-4 py-2 rounded cursor-pointer`}
             >
               {deck?.deckName}
