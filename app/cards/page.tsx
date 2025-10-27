@@ -1,10 +1,10 @@
-import CardsCarousel from "@/components/CardsCarousel/CardsCarousel";
+import Cards from "@/components/Cards/Cards";
 import ProtectedRoute from "@/components/UtilityComp/ProtectedRoute";
 
 export default function cardsPage() {
   return (
     <ProtectedRoute>
-      <CardsCarousel />
+      <Cards />
     </ProtectedRoute>
   );
 }
