@@ -1,11 +1,67 @@
-.file-top::after {
-    content: "";
-    position: absolute;
-    width:10px;
-    height:10px;
-    background-color: transparent;
-    top: 6px;
-    border-radius: 0px 0px 0px 10px;
+:root {
+  --card-width: 90px;
+  --card-height: 130px;
+}
+
+
+.deck-container {
+  position: relative;
+  width: var(--card-width);
+  height: 150px;
+}
+.deck-container div {
+  transition: all 0.3s ease;
+}
+.left-left-card {
+  left: -20px;
+  height: calc(var(--card-height) - 20px);
+  z-index: 8;
+}
+.left-card {
+  left: -10px;
+  height: calc(var(--card-height) - 10px);
+  z-index: 9;
+}
+.center-card {
+  left: 0px;
+  height: var(--card-height);
+  z-index: 10;
+}
+.right-card {
+  right: -10px;
+  height: calc(var(--card-height) - 10px);
+  z-index: 9;
+}
+.right-right-card {
+  right: -20px;
+  height: calc(var(--card-height) - 20px);
+  z-index: 8;
+}
+
+.deck-container:hover .left-left-card {
+    rotate: -25deg;
+    left: -10px;
+}
+.deck-container:hover .left-card {
+    rotate: -12deg;
+    left: -5px;
+}
+.deck-container:hover .right-right-card {
+    rotate: 25deg;
     right: -10px;
-    box-shadow: -10px 10px 0px 10px #facc15;
+}
+.deck-container:hover .right-card {
+    rotate: 12deg;
+    right: -5px;
+}
+.deck-container:hover .dCard {
+    border-color: gray !important;
+}
+.dCard {
+  position: absolute;
+  border-color:#2e2e2e;
+  width: var(--card-width);
+  border-radius: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
